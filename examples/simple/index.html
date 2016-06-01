@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>elm-datepicker example</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://necolas.github.io/normalize.css/4.1.1/normalize.css" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="elm-datepicker.css" />
+
+    <style type="text/css">
+      .container {
+          width: 680px;
+          margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="simple">
+      </div>
+    </div>
+
+    <script src="simple.js"></script>
+    <script>
+      Elm.Simple.embed(document.getElementById("simple"));
+    </script>
+  </body>
+</html>
