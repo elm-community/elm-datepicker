@@ -21,7 +21,7 @@ module DatePicker
 
 import Date exposing (Date, Day(..), Month(..), year, month, day)
 import Html exposing (..)
-import Html.Attributes exposing (href, placeholder, type', value)
+import Html.Attributes exposing (href, placeholder, tabindex, type', value)
 import Html.Events exposing (on, onBlur, onClick, onFocus, onWithOptions, targetValue)
 import Json.Decode as Json
 import Task
@@ -337,6 +337,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                         [ class "prev"
                         , href "javascript:;"
                         , onClick PrevMonth
+                        , tabindex -1
                         ]
                         []
                     ]
@@ -349,6 +350,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                         [ class "next"
                         , href "javascript:;"
                         , onClick NextMonth
+                        , tabindex -1
                         ]
                         []
                     ]
