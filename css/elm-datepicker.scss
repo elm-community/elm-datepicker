@@ -17,6 +17,7 @@ $datepicker-border-color: #CCC;
 .#{$datepicker-ns}picker {
   position: absolute;
   border: 1px solid $datepicker-border-color;
+  z-index: 10;
 }
 
 .#{$datepicker-ns}picker-header,
