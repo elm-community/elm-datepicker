@@ -135,4 +135,8 @@ $datepicker-border-color: #CCC;
   &.#{$datepicker-ns}disabled {
     color: #EEE;
   }
+
+  &.#{$datepicker-ns}picked {
+    color: $datepicker-picked-fg;
+  }
 }
