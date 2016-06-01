@@ -22,7 +22,7 @@ module DatePicker
 import Date exposing (Date, Day(..), Month(..), year, month, day)
 import Html exposing (..)
 import Html.Attributes exposing (href, placeholder, type', value)
-import Html.Events exposing (onBlur, onClick, onFocus, onWithOptions)
+import Html.Events exposing (on, onBlur, onClick, onFocus, onWithOptions, targetValue)
 import Json.Decode as Json
 import Task
 
@@ -44,6 +44,7 @@ type Msg
     | Pick Date
     | Focus
     | Blur
+    | Change String
     | MouseDown
     | MouseUp
 
@@ -89,6 +90,7 @@ you want to customize your date picker.
 
 To disable certain dates:
 
+
     import Date exposing (Day(..), dayOfWeek)
     import DatePicker exposing (defaultSettings)
 
@@ -121,18 +123,22 @@ the returned command for the date picker to behave correctly.
 -}
 init : Settings -> ( DatePicker, Cmd Msg )
 init settings =
-    ( DatePicker
-        <| prepareDates (Maybe.withDefault initDate settings.pickedDate)
-            { open = False
-            , forceOpen = False
-            , today = initDate
-            , currentMonth = initDate
-            , currentDates = []
-            , pickedDate = settings.pickedDate
-            , settings = settings
-            }
-    , Task.perform (always <| CurrentDate initDate) CurrentDate Date.now
-    )
+    let
+        date =
+            Maybe.withDefault initDate settings.pickedDate
+    in
+        ( DatePicker
+            <| prepareDates date
+                { open = False
+                , forceOpen = False
+                , today = initDate
+                , currentMonth = initDate
+                , currentDates = []
+                , pickedDate = settings.pickedDate
+                , settings = settings
+                }
+        , Task.perform (always <| CurrentDate initDate) CurrentDate Date.now
+        )
 
 
 prepareDates : Date -> Model -> Model
@@ -184,6 +190,30 @@ update msg (DatePicker model) =
         Blur ->
             { model | open = model.forceOpen } ! []
 
+        Change inputDate ->
+            let
+                ( valid, pickedDate ) =
+                    case Date.fromString inputDate of
+                        Err _ ->
+                            ( False, model.pickedDate )
+
+                        Ok date ->
+                            if model.settings.isDisabled date then
+                                ( False, model.pickedDate )
+                            else
+                                ( True, Just date )
+
+                month =
+                    Maybe.withDefault model.currentMonth pickedDate
+            in
+                ( DatePicker <| prepareDates month { model | pickedDate = pickedDate }
+                , Cmd.none
+                , if valid then
+                    pickedDate
+                  else
+                    Nothing
+                )
+
         MouseDown ->
             { model | forceOpen = True } ! []
 
@@ -203,6 +233,7 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
             input
                 ([ class "input"
                  , type' "text"
+                 , on "change" (Json.map Change targetValue)
                  , onBlur Blur
                  , onClick Focus
                  , onFocus Focus
