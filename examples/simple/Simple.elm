@@ -1,6 +1,6 @@
 module Simple exposing (main)
 
-import Date exposing (Date, day, month, year)
+import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings)
 import Html exposing (Html, div, h1, text)
 import Html.App as Html
@@ -19,8 +19,11 @@ type alias Model =
 init : ( Model, Cmd Msg )
 init =
     let
+        isDisabled date =
+            dayOfWeek date `List.member` [ Sat, Sun ]
+
         ( datePicker, datePickerFx ) =
-            DatePicker.init defaultSettings
+            DatePicker.init { defaultSettings | isDisabled = isDisabled }
     in
         { date = Nothing
         , datePicker = datePicker
