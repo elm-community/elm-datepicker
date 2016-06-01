@@ -11,8 +11,8 @@ A reusable date picker component in Elm.
 
 See the [examples][examples] folder or [click here][demo] for a demo.
 
-[examples]:
-[demo]:
+[examples]: https://github.com/Bogdanp/elm-datepicker/tree/master/examples
+[demo]: http://bogdanp.github.io/elm-datepicker
 
 
 ## CSS
@@ -21,5 +21,5 @@ The CSS for the date picker is distributed separately.  You can grab
 the compiled CSS from [here][compiled] or you can grab the SCSS source
 from [here][scss].
 
-[compiled]:
-[scss]:
+[compiled]: https://github.com/Bogdanp/elm-datepicker/blob/master/css/elm-datepicker.css
+[scss]: https://github.com/Bogdanp/elm-datepicker/blob/master/css/elm-datepicker.scss
