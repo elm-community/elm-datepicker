@@ -7702,8 +7702,8 @@ var _Bogdanp$elm_datepicker$DatePicker$unsafeDate = function (date) {
 		return _elm_lang$core$Native_Utils.crashCase(
 			'DatePicker',
 			{
-				start: {line: 813, column: 5},
-				end: {line: 818, column: 17}
+				start: {line: 815, column: 5},
+				end: {line: 820, column: 17}
 			},
 			_p0)('DatePicker.unsafeDate: failed to parse initial date');
 	} else {
@@ -7780,8 +7780,8 @@ var _Bogdanp$elm_datepicker$DatePicker$monthFromInt = function (month) {
 			return _elm_lang$core$Native_Utils.crashCase(
 				'DatePicker',
 				{
-					start: {line: 704, column: 5},
-					end: {line: 742, column: 72}
+					start: {line: 706, column: 5},
+					end: {line: 744, column: 72}
 				},
 				_p3)(
 				A2(
@@ -8307,7 +8307,8 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 									[
 										$class('prev'),
 										_elm_lang$html$Html_Attributes$href('javascript:;'),
-										_elm_lang$html$Html_Events$onClick(_Bogdanp$elm_datepicker$DatePicker$PrevMonth)
+										_elm_lang$html$Html_Events$onClick(_Bogdanp$elm_datepicker$DatePicker$PrevMonth),
+										_elm_lang$html$Html_Attributes$tabindex(-1)
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[]))
@@ -8359,7 +8360,8 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 									[
 										$class('next'),
 										_elm_lang$html$Html_Attributes$href('javascript:;'),
-										_elm_lang$html$Html_Events$onClick(_Bogdanp$elm_datepicker$DatePicker$NextMonth)
+										_elm_lang$html$Html_Events$onClick(_Bogdanp$elm_datepicker$DatePicker$NextMonth),
+										_elm_lang$html$Html_Attributes$tabindex(-1)
 									]),
 								_elm_lang$core$Native_List.fromArray(
 									[]))
