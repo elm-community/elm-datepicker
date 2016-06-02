@@ -64,6 +64,9 @@
     height: 2em;
     text-align: center; }
 
+.elm-datepicker--row {
+  border-top: 1px solid #F2F2F2; }
+
 .elm-datepicker--dow {
   border-bottom: 1px solid #CCC;
   cursor: default; }

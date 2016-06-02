@@ -5,6 +5,7 @@ $datepicker-arrow-hover: #BBB;
 $datepicker-picked-fg: white;
 $datepicker-picked-bg: darkblue;
 $datepicker-border-color: #CCC;
+$datepicker-row-border-color: #F2F2F2;
 
 .#{$datepicker-ns}container {
   position: relative;
@@ -96,6 +97,10 @@ $datepicker-border-color: #CCC;
 
     text-align: center;
   }
+}
+
+.#{$datepicker-ns}row {
+  border-top: 1px solid $datepicker-row-border-color;
 }
 
 .#{$datepicker-ns}dow {
