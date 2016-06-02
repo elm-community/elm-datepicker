@@ -6,7 +6,8 @@
 
 .elm-datepicker--picker {
   position: absolute;
-  border: 1px solid #CCC; }
+  border: 1px solid #CCC;
+  z-index: 10; }
 
 .elm-datepicker--picker-header,
 .elm-datepicker--weekdays {
@@ -62,6 +63,9 @@
     width: 2em;
     height: 2em;
     text-align: center; }
+
+.elm-datepicker--row {
+  border-top: 1px solid #F2F2F2; }
 
 .elm-datepicker--dow {
   border-bottom: 1px solid #CCC;

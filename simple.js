@@ -4344,6 +4344,454 @@ var _elm_lang$core$Date$Mar = {ctor: 'Mar'};
 var _elm_lang$core$Date$Feb = {ctor: 'Feb'};
 var _elm_lang$core$Date$Jan = {ctor: 'Jan'};
 
+var _Bogdanp$elm_datepicker$DatePicker_Date$unsafeDate = function (date) {
+	var _p0 = _elm_lang$core$Date$fromString(date);
+	if (_p0.ctor === 'Err') {
+		return _elm_lang$core$Native_Utils.crashCase(
+			'DatePicker.Date',
+			{
+				start: {line: 536, column: 5},
+				end: {line: 541, column: 17}
+			},
+			_p0)(
+			A2(_elm_lang$core$Basics_ops['++'], 'unsafeDate: failed to parse date:', _p0._0));
+	} else {
+		return _p0._0;
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$isLeapYear = function (year) {
+	return _elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics$rem, year, 100),
+		0) ? _elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics$rem, year, 400),
+		0) : _elm_lang$core$Native_Utils.eq(
+		A2(_elm_lang$core$Basics$rem, year, 4),
+		0);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$daysInMonth = F2(
+	function (year, month) {
+		var _p2 = month;
+		switch (_p2.ctor) {
+			case 'Jan':
+				return 31;
+			case 'Feb':
+				return _Bogdanp$elm_datepicker$DatePicker_Date$isLeapYear(year) ? 29 : 28;
+			case 'Mar':
+				return 31;
+			case 'Apr':
+				return 30;
+			case 'May':
+				return 31;
+			case 'Jun':
+				return 30;
+			case 'Jul':
+				return 31;
+			case 'Aug':
+				return 31;
+			case 'Sep':
+				return 30;
+			case 'Oct':
+				return 31;
+			case 'Nov':
+				return 30;
+			default:
+				return 31;
+		}
+	});
+var _Bogdanp$elm_datepicker$DatePicker_Date$monthFromInt = function (month) {
+	var _p3 = month;
+	switch (_p3) {
+		case 1:
+			return _elm_lang$core$Date$Jan;
+		case 2:
+			return _elm_lang$core$Date$Feb;
+		case 3:
+			return _elm_lang$core$Date$Mar;
+		case 4:
+			return _elm_lang$core$Date$Apr;
+		case 5:
+			return _elm_lang$core$Date$May;
+		case 6:
+			return _elm_lang$core$Date$Jun;
+		case 7:
+			return _elm_lang$core$Date$Jul;
+		case 8:
+			return _elm_lang$core$Date$Aug;
+		case 9:
+			return _elm_lang$core$Date$Sep;
+		case 10:
+			return _elm_lang$core$Date$Oct;
+		case 11:
+			return _elm_lang$core$Date$Nov;
+		case 12:
+			return _elm_lang$core$Date$Dec;
+		default:
+			return _elm_lang$core$Native_Utils.crashCase(
+				'DatePicker.Date',
+				{
+					start: {line: 432, column: 5},
+					end: {line: 470, column: 72}
+				},
+				_p3)(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'monthFromInt: invalid month: ',
+					_elm_lang$core$Basics$toString(_p3)));
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$monthToInt = function (month) {
+	var _p5 = month;
+	switch (_p5.ctor) {
+		case 'Jan':
+			return 1;
+		case 'Feb':
+			return 2;
+		case 'Mar':
+			return 3;
+		case 'Apr':
+			return 4;
+		case 'May':
+			return 5;
+		case 'Jun':
+			return 6;
+		case 'Jul':
+			return 7;
+		case 'Aug':
+			return 8;
+		case 'Sep':
+			return 9;
+		case 'Oct':
+			return 10;
+		case 'Nov':
+			return 11;
+		default:
+			return 12;
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$succMonth = function (month) {
+	return _Bogdanp$elm_datepicker$DatePicker_Date$monthFromInt(
+		A2(
+			_elm_lang$core$Basics$rem,
+			_Bogdanp$elm_datepicker$DatePicker_Date$monthToInt(month),
+			12) + 1);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$predMonth = function (month) {
+	var prev = A2(
+		_elm_lang$core$Basics$rem,
+		_Bogdanp$elm_datepicker$DatePicker_Date$monthToInt(month) - 1,
+		12);
+	return _elm_lang$core$Native_Utils.eq(prev, 0) ? _elm_lang$core$Date$Dec : _Bogdanp$elm_datepicker$DatePicker_Date$monthFromInt(prev);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$monthToString = function (month) {
+	var $int = _Bogdanp$elm_datepicker$DatePicker_Date$monthToInt(month);
+	return (_elm_lang$core$Native_Utils.cmp($int, 10) < 0) ? A2(
+		_elm_lang$core$Basics_ops['++'],
+		'0',
+		_elm_lang$core$Basics$toString($int)) : _elm_lang$core$Basics$toString($int);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$dayFromInt = function (day) {
+	var _p6 = day;
+	switch (_p6) {
+		case 1:
+			return _elm_lang$core$Date$Mon;
+		case 2:
+			return _elm_lang$core$Date$Tue;
+		case 3:
+			return _elm_lang$core$Date$Wed;
+		case 4:
+			return _elm_lang$core$Date$Thu;
+		case 5:
+			return _elm_lang$core$Date$Fri;
+		case 6:
+			return _elm_lang$core$Date$Sat;
+		case 7:
+			return _elm_lang$core$Date$Sun;
+		default:
+			return _elm_lang$core$Native_Utils.crashCase(
+				'DatePicker.Date',
+				{
+					start: {line: 335, column: 5},
+					end: {line: 358, column: 70}
+				},
+				_p6)(
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'dayFromInt: invalid day: ',
+					_elm_lang$core$Basics$toString(day)));
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$dayToInt = function (day) {
+	var _p8 = day;
+	switch (_p8.ctor) {
+		case 'Mon':
+			return 1;
+		case 'Tue':
+			return 2;
+		case 'Wed':
+			return 3;
+		case 'Thu':
+			return 4;
+		case 'Fri':
+			return 5;
+		case 'Sat':
+			return 6;
+		default:
+			return 7;
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$dayToString = function (day) {
+	return (_elm_lang$core$Native_Utils.cmp(day, 10) < 0) ? A2(
+		_elm_lang$core$Basics_ops['++'],
+		'0',
+		_elm_lang$core$Basics$toString(day)) : _elm_lang$core$Basics$toString(day);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$mkDate = F3(
+	function (year, month, day) {
+		return _Bogdanp$elm_datepicker$DatePicker_Date$unsafeDate(
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_elm_lang$core$Basics$toString(year),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'/',
+					A2(
+						_elm_lang$core$Basics_ops['++'],
+						_Bogdanp$elm_datepicker$DatePicker_Date$monthToString(month),
+						A2(
+							_elm_lang$core$Basics_ops['++'],
+							'/',
+							_Bogdanp$elm_datepicker$DatePicker_Date$dayToString(day))))));
+	});
+var _Bogdanp$elm_datepicker$DatePicker_Date$predDow = function (day) {
+	var prev = A2(
+		_elm_lang$core$Basics$rem,
+		_Bogdanp$elm_datepicker$DatePicker_Date$dayToInt(day) - 1,
+		7);
+	return _elm_lang$core$Native_Utils.eq(prev, 0) ? _elm_lang$core$Date$Sun : _Bogdanp$elm_datepicker$DatePicker_Date$dayFromInt(prev);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$succDow = function (day) {
+	return _Bogdanp$elm_datepicker$DatePicker_Date$dayFromInt(
+		A2(
+			_elm_lang$core$Basics$rem,
+			_Bogdanp$elm_datepicker$DatePicker_Date$dayToInt(day),
+			7) + 1);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$subDay = function (date) {
+	var day = _elm_lang$core$Date$day(date) - 1;
+	var year = _elm_lang$core$Date$year(date);
+	var month = _elm_lang$core$Date$month(date);
+	var pred = _Bogdanp$elm_datepicker$DatePicker_Date$predMonth(month);
+	var predYear = _elm_lang$core$Native_Utils.eq(pred, _elm_lang$core$Date$Dec) ? (year - 1) : year;
+	return (_elm_lang$core$Native_Utils.cmp(day, 1) < 0) ? A3(
+		_Bogdanp$elm_datepicker$DatePicker_Date$mkDate,
+		predYear,
+		pred,
+		A2(_Bogdanp$elm_datepicker$DatePicker_Date$daysInMonth, predYear, pred)) : A3(_Bogdanp$elm_datepicker$DatePicker_Date$mkDate, year, month, day);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$addDay = function (date) {
+	var day = _elm_lang$core$Date$day(date) + 1;
+	var year = _elm_lang$core$Date$year(date);
+	var month = _elm_lang$core$Date$month(date);
+	var dim = A2(_Bogdanp$elm_datepicker$DatePicker_Date$daysInMonth, year, month);
+	var succ = _Bogdanp$elm_datepicker$DatePicker_Date$succMonth(month);
+	var succYear = _elm_lang$core$Native_Utils.eq(succ, _elm_lang$core$Date$Jan) ? (year + 1) : year;
+	return (_elm_lang$core$Native_Utils.cmp(day, dim) > 0) ? A3(_Bogdanp$elm_datepicker$DatePicker_Date$mkDate, succYear, succ, 1) : A3(_Bogdanp$elm_datepicker$DatePicker_Date$mkDate, year, month, day);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$prevMonth = function (date) {
+	var prevMonth = _Bogdanp$elm_datepicker$DatePicker_Date$predMonth(
+		_elm_lang$core$Date$month(date));
+	var prevYear = _elm_lang$core$Native_Utils.eq(prevMonth, _elm_lang$core$Date$Dec) ? (_elm_lang$core$Date$year(date) - 1) : _elm_lang$core$Date$year(date);
+	return A3(_Bogdanp$elm_datepicker$DatePicker_Date$mkDate, prevYear, prevMonth, 1);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$nextMonth = function (date) {
+	var nextMonth = _Bogdanp$elm_datepicker$DatePicker_Date$succMonth(
+		_elm_lang$core$Date$month(date));
+	var nextYear = _elm_lang$core$Native_Utils.eq(nextMonth, _elm_lang$core$Date$Jan) ? (_elm_lang$core$Date$year(date) + 1) : _elm_lang$core$Date$year(date);
+	return A3(_Bogdanp$elm_datepicker$DatePicker_Date$mkDate, nextYear, nextMonth, 1);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$firstOfMonth = function (date) {
+	return A3(
+		_Bogdanp$elm_datepicker$DatePicker_Date$mkDate,
+		_elm_lang$core$Date$year(date),
+		_elm_lang$core$Date$month(date),
+		1);
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$repeat = function (f) {
+	var go = F2(
+		function (n, x) {
+			go:
+			while (true) {
+				if (_elm_lang$core$Native_Utils.eq(n, 0)) {
+					return x;
+				} else {
+					var _v6 = n - 1,
+						_v7 = f(x);
+					n = _v6;
+					x = _v7;
+					continue go;
+				}
+			}
+		});
+	return go;
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$addDays = _Bogdanp$elm_datepicker$DatePicker_Date$repeat(_Bogdanp$elm_datepicker$DatePicker_Date$addDay);
+var _Bogdanp$elm_datepicker$DatePicker_Date$subDays = _Bogdanp$elm_datepicker$DatePicker_Date$repeat(_Bogdanp$elm_datepicker$DatePicker_Date$subDay);
+var _Bogdanp$elm_datepicker$DatePicker_Date$addDows = _Bogdanp$elm_datepicker$DatePicker_Date$repeat(_Bogdanp$elm_datepicker$DatePicker_Date$succDow);
+var _Bogdanp$elm_datepicker$DatePicker_Date$subDows = _Bogdanp$elm_datepicker$DatePicker_Date$repeat(_Bogdanp$elm_datepicker$DatePicker_Date$succDow);
+var _Bogdanp$elm_datepicker$DatePicker_Date$dateTuple = function (date) {
+	return {
+		ctor: '_Tuple3',
+		_0: _elm_lang$core$Date$year(date),
+		_1: _Bogdanp$elm_datepicker$DatePicker_Date$monthToInt(
+			_elm_lang$core$Date$month(date)),
+		_2: _elm_lang$core$Date$day(date)
+	};
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$trimDates = F2(
+	function (firstDay, dates) {
+		var dl = function (dates) {
+			dl:
+			while (true) {
+				var _p9 = dates;
+				if (_p9.ctor === '[]') {
+					return _elm_lang$core$Native_List.fromArray(
+						[]);
+				} else {
+					if (_elm_lang$core$Native_Utils.eq(
+						_elm_lang$core$Date$dayOfWeek(_p9._0),
+						firstDay)) {
+						return dates;
+					} else {
+						var _v9 = _p9._1;
+						dates = _v9;
+						continue dl;
+					}
+				}
+			}
+		};
+		var lastDay = _Bogdanp$elm_datepicker$DatePicker_Date$predDow(firstDay);
+		var dr = function (dates) {
+			dr:
+			while (true) {
+				var _p10 = dates;
+				if (_p10.ctor === '[]') {
+					return _elm_lang$core$Native_List.fromArray(
+						[]);
+				} else {
+					if (_elm_lang$core$Native_Utils.eq(
+						_elm_lang$core$Date$dayOfWeek(_p10._0),
+						lastDay)) {
+						return dates;
+					} else {
+						var _v11 = _p10._1;
+						dates = _v11;
+						continue dr;
+					}
+				}
+			}
+		};
+		return _elm_lang$core$List$reverse(
+			dr(
+				_elm_lang$core$List$reverse(
+					dl(dates))));
+	});
+var _Bogdanp$elm_datepicker$DatePicker_Date$datesInRange = F3(
+	function (firstDay, min, max) {
+		var go = F2(
+			function (x, acc) {
+				go:
+				while (true) {
+					var y = _Bogdanp$elm_datepicker$DatePicker_Date$subDay(x);
+					if (_elm_lang$core$Native_Utils.eq(
+						_Bogdanp$elm_datepicker$DatePicker_Date$dateTuple(y),
+						_Bogdanp$elm_datepicker$DatePicker_Date$dateTuple(min))) {
+						return A2(_elm_lang$core$List_ops['::'], y, acc);
+					} else {
+						var _v12 = y,
+							_v13 = A2(_elm_lang$core$List_ops['::'], y, acc);
+						x = _v12;
+						acc = _v13;
+						continue go;
+					}
+				}
+			});
+		return A2(
+			_Bogdanp$elm_datepicker$DatePicker_Date$trimDates,
+			firstDay,
+			A2(
+				go,
+				max,
+				_elm_lang$core$Native_List.fromArray(
+					[])));
+	});
+var _Bogdanp$elm_datepicker$DatePicker_Date$formatMonth = function (month) {
+	var _p11 = month;
+	switch (_p11.ctor) {
+		case 'Jan':
+			return 'January';
+		case 'Feb':
+			return 'February';
+		case 'Mar':
+			return 'March';
+		case 'Apr':
+			return 'April';
+		case 'May':
+			return 'May';
+		case 'Jun':
+			return 'June';
+		case 'Jul':
+			return 'July';
+		case 'Aug':
+			return 'August';
+		case 'Sep':
+			return 'September';
+		case 'Oct':
+			return 'October';
+		case 'Nov':
+			return 'November';
+		default:
+			return 'December';
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$formatDay = function (day) {
+	var _p12 = day;
+	switch (_p12.ctor) {
+		case 'Mon':
+			return 'Mo';
+		case 'Tue':
+			return 'Tu';
+		case 'Wed':
+			return 'We';
+		case 'Thu':
+			return 'Th';
+		case 'Fri':
+			return 'Fr';
+		case 'Sat':
+			return 'Sa';
+		default:
+			return 'Su';
+	}
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$formatDate = function (date) {
+	return A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Basics$toString(
+			_elm_lang$core$Date$year(date)),
+		A2(
+			_elm_lang$core$Basics_ops['++'],
+			'/',
+			A2(
+				_elm_lang$core$Basics_ops['++'],
+				_Bogdanp$elm_datepicker$DatePicker_Date$monthToString(
+					_elm_lang$core$Date$month(date)),
+				A2(
+					_elm_lang$core$Basics_ops['++'],
+					'/',
+					_Bogdanp$elm_datepicker$DatePicker_Date$dayToString(
+						_elm_lang$core$Date$day(date))))));
+};
+var _Bogdanp$elm_datepicker$DatePicker_Date$initDate = A3(_Bogdanp$elm_datepicker$DatePicker_Date$mkDate, 1992, _elm_lang$core$Date$May, 29);
+
 //import Native.List //
 
 var _elm_lang$core$Native_Array = function() {
@@ -7696,432 +8144,111 @@ var _elm_lang$html$Html_Events$Options = F2(
 		return {stopPropagation: a, preventDefault: b};
 	});
 
-var _Bogdanp$elm_datepicker$DatePicker$unsafeDate = function (date) {
-	var _p0 = _elm_lang$core$Date$fromString(date);
-	if (_p0.ctor === 'Err') {
-		return _elm_lang$core$Native_Utils.crashCase(
-			'DatePicker',
-			{
-				start: {line: 815, column: 5},
-				end: {line: 820, column: 17}
-			},
-			_p0)('DatePicker.unsafeDate: failed to parse initial date');
-	} else {
-		return _p0._0;
-	}
-};
-var _Bogdanp$elm_datepicker$DatePicker$isLeapYear = function (year) {
-	return _elm_lang$core$Native_Utils.eq(
-		A2(_elm_lang$core$Basics$rem, year, 100),
-		0) ? _elm_lang$core$Native_Utils.eq(
-		A2(_elm_lang$core$Basics$rem, year, 400),
-		0) : _elm_lang$core$Native_Utils.eq(
-		A2(_elm_lang$core$Basics$rem, year, 4),
-		0);
-};
-var _Bogdanp$elm_datepicker$DatePicker$daysInMonth = F2(
-	function (year, month) {
-		var _p2 = month;
-		switch (_p2.ctor) {
-			case 'Jan':
-				return 31;
-			case 'Feb':
-				return _Bogdanp$elm_datepicker$DatePicker$isLeapYear(year) ? 29 : 28;
-			case 'Mar':
-				return 31;
-			case 'Apr':
-				return 30;
-			case 'May':
-				return 31;
-			case 'Jun':
-				return 30;
-			case 'Jul':
-				return 31;
-			case 'Aug':
-				return 31;
-			case 'Sep':
-				return 30;
-			case 'Oct':
-				return 31;
-			case 'Nov':
-				return 30;
-			default:
-				return 31;
-		}
-	});
-var _Bogdanp$elm_datepicker$DatePicker$monthFromInt = function (month) {
-	var _p3 = month;
-	switch (_p3) {
-		case 1:
-			return _elm_lang$core$Date$Jan;
-		case 2:
-			return _elm_lang$core$Date$Feb;
-		case 3:
-			return _elm_lang$core$Date$Mar;
-		case 4:
-			return _elm_lang$core$Date$Apr;
-		case 5:
-			return _elm_lang$core$Date$May;
-		case 6:
-			return _elm_lang$core$Date$Jun;
-		case 7:
-			return _elm_lang$core$Date$Jul;
-		case 8:
-			return _elm_lang$core$Date$Aug;
-		case 9:
-			return _elm_lang$core$Date$Sep;
-		case 10:
-			return _elm_lang$core$Date$Oct;
-		case 11:
-			return _elm_lang$core$Date$Nov;
-		case 12:
-			return _elm_lang$core$Date$Dec;
-		default:
-			return _elm_lang$core$Native_Utils.crashCase(
-				'DatePicker',
-				{
-					start: {line: 706, column: 5},
-					end: {line: 744, column: 72}
-				},
-				_p3)(
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'monthFromInt: invalid month: ',
-					_elm_lang$core$Basics$toString(_p3)));
-	}
-};
-var _Bogdanp$elm_datepicker$DatePicker$monthToInt = function (month) {
-	var _p5 = month;
-	switch (_p5.ctor) {
-		case 'Jan':
-			return 1;
-		case 'Feb':
-			return 2;
-		case 'Mar':
-			return 3;
-		case 'Apr':
-			return 4;
-		case 'May':
-			return 5;
-		case 'Jun':
-			return 6;
-		case 'Jul':
-			return 7;
-		case 'Aug':
-			return 8;
-		case 'Sep':
-			return 9;
-		case 'Oct':
-			return 10;
-		case 'Nov':
-			return 11;
-		default:
-			return 12;
-	}
-};
-var _Bogdanp$elm_datepicker$DatePicker$monthToString = function (month) {
-	var $int = _Bogdanp$elm_datepicker$DatePicker$monthToInt(month);
-	return (_elm_lang$core$Native_Utils.cmp($int, 10) < 0) ? A2(
-		_elm_lang$core$Basics_ops['++'],
-		'0',
-		_elm_lang$core$Basics$toString($int)) : _elm_lang$core$Basics$toString($int);
-};
-var _Bogdanp$elm_datepicker$DatePicker$mkDate = F3(
-	function (year, month, day) {
-		return _Bogdanp$elm_datepicker$DatePicker$unsafeDate(
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_elm_lang$core$Basics$toString(year),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'/',
-					A2(
-						_elm_lang$core$Basics_ops['++'],
-						_Bogdanp$elm_datepicker$DatePicker$monthToString(month),
-						A2(
-							_elm_lang$core$Basics_ops['++'],
-							'/',
-							_elm_lang$core$Basics$toString(day))))));
-	});
-var _Bogdanp$elm_datepicker$DatePicker$initDate = A3(_Bogdanp$elm_datepicker$DatePicker$mkDate, 1992, _elm_lang$core$Date$May, 29);
-var _Bogdanp$elm_datepicker$DatePicker$dayToString = function (day) {
-	return (_elm_lang$core$Native_Utils.cmp(day, 10) < 0) ? A2(
-		_elm_lang$core$Basics_ops['++'],
-		'0',
-		_elm_lang$core$Basics$toString(day)) : _elm_lang$core$Basics$toString(day);
-};
-var _Bogdanp$elm_datepicker$DatePicker$succMonth = function (month) {
-	return _Bogdanp$elm_datepicker$DatePicker$monthFromInt(
-		A2(
-			_elm_lang$core$Basics$rem,
-			_Bogdanp$elm_datepicker$DatePicker$monthToInt(month),
-			12) + 1);
-};
-var _Bogdanp$elm_datepicker$DatePicker$predMonth = function (month) {
-	var prev = A2(
-		_elm_lang$core$Basics$rem,
-		_Bogdanp$elm_datepicker$DatePicker$monthToInt(month) - 1,
-		12);
-	return _elm_lang$core$Native_Utils.eq(prev, 0) ? _elm_lang$core$Date$Dec : _Bogdanp$elm_datepicker$DatePicker$monthFromInt(prev);
-};
-var _Bogdanp$elm_datepicker$DatePicker$subDay = function (date) {
-	var day = _elm_lang$core$Date$day(date) - 1;
-	var year = _elm_lang$core$Date$year(date);
-	var month = _elm_lang$core$Date$month(date);
-	var pred = _Bogdanp$elm_datepicker$DatePicker$predMonth(month);
-	var predYear = _elm_lang$core$Native_Utils.eq(pred, _elm_lang$core$Date$Dec) ? (year - 1) : year;
-	return (_elm_lang$core$Native_Utils.cmp(day, 1) < 0) ? A3(
-		_Bogdanp$elm_datepicker$DatePicker$mkDate,
-		predYear,
-		pred,
-		A2(_Bogdanp$elm_datepicker$DatePicker$daysInMonth, predYear, pred)) : A3(_Bogdanp$elm_datepicker$DatePicker$mkDate, year, month, day);
-};
-var _Bogdanp$elm_datepicker$DatePicker$addDay = function (date) {
-	var day = _elm_lang$core$Date$day(date) + 1;
-	var year = _elm_lang$core$Date$year(date);
-	var month = _elm_lang$core$Date$month(date);
-	var dim = A2(_Bogdanp$elm_datepicker$DatePicker$daysInMonth, year, month);
-	var succ = _Bogdanp$elm_datepicker$DatePicker$succMonth(month);
-	var succYear = _elm_lang$core$Native_Utils.eq(succ, _elm_lang$core$Date$Jan) ? (year + 1) : year;
-	return (_elm_lang$core$Native_Utils.cmp(day, dim) > 0) ? A3(_Bogdanp$elm_datepicker$DatePicker$mkDate, succYear, succ, 1) : A3(_Bogdanp$elm_datepicker$DatePicker$mkDate, year, month, day);
-};
-var _Bogdanp$elm_datepicker$DatePicker$prevMonth = function (date) {
-	var prevMonth = _Bogdanp$elm_datepicker$DatePicker$predMonth(
-		_elm_lang$core$Date$month(date));
-	var prevYear = _elm_lang$core$Native_Utils.eq(prevMonth, _elm_lang$core$Date$Dec) ? (_elm_lang$core$Date$year(date) - 1) : _elm_lang$core$Date$year(date);
-	return A3(_Bogdanp$elm_datepicker$DatePicker$mkDate, prevYear, prevMonth, 1);
-};
-var _Bogdanp$elm_datepicker$DatePicker$nextMonth = function (date) {
-	var nextMonth = _Bogdanp$elm_datepicker$DatePicker$succMonth(
-		_elm_lang$core$Date$month(date));
-	var nextYear = _elm_lang$core$Native_Utils.eq(nextMonth, _elm_lang$core$Date$Jan) ? (_elm_lang$core$Date$year(date) + 1) : _elm_lang$core$Date$year(date);
-	return A3(_Bogdanp$elm_datepicker$DatePicker$mkDate, nextYear, nextMonth, 1);
-};
-var _Bogdanp$elm_datepicker$DatePicker$firstOfMonth = function (date) {
-	return A3(
-		_Bogdanp$elm_datepicker$DatePicker$mkDate,
-		_elm_lang$core$Date$year(date),
-		_elm_lang$core$Date$month(date),
-		1);
-};
-var _Bogdanp$elm_datepicker$DatePicker$repeat = function (f) {
-	var go = F2(
-		function (n, x) {
+var _Bogdanp$elm_datepicker$DatePicker_ops = _Bogdanp$elm_datepicker$DatePicker_ops || {};
+_Bogdanp$elm_datepicker$DatePicker_ops['?>'] = _elm_lang$core$Basics$flip(_elm_lang$core$Maybe$withDefault);
+var _Bogdanp$elm_datepicker$DatePicker$groupDates = function (dates) {
+	var go = F4(
+		function (i, xs, racc, acc) {
 			go:
 			while (true) {
-				if (_elm_lang$core$Native_Utils.eq(n, 0)) {
-					return x;
+				var _p0 = xs;
+				if (_p0.ctor === '[]') {
+					return _elm_lang$core$List$reverse(acc);
 				} else {
-					var _v4 = n - 1,
-						_v5 = f(x);
-					n = _v4;
-					x = _v5;
-					continue go;
-				}
-			}
-		});
-	return go;
-};
-var _Bogdanp$elm_datepicker$DatePicker$addDays = _Bogdanp$elm_datepicker$DatePicker$repeat(_Bogdanp$elm_datepicker$DatePicker$addDay);
-var _Bogdanp$elm_datepicker$DatePicker$subDays = _Bogdanp$elm_datepicker$DatePicker$repeat(_Bogdanp$elm_datepicker$DatePicker$subDay);
-var _Bogdanp$elm_datepicker$DatePicker$datesEq = F2(
-	function (a, b) {
-		return _elm_lang$core$Native_Utils.eq(
-			_elm_lang$core$Date$year(a),
-			_elm_lang$core$Date$year(b)) && (_elm_lang$core$Native_Utils.eq(
-			_elm_lang$core$Date$month(a),
-			_elm_lang$core$Date$month(b)) && _elm_lang$core$Native_Utils.eq(
-			_elm_lang$core$Date$day(a),
-			_elm_lang$core$Date$day(b)));
-	});
-var _Bogdanp$elm_datepicker$DatePicker$datesInRange = F2(
-	function (min, max) {
-		var go = F2(
-			function (x, acc) {
-				go:
-				while (true) {
-					var y = _Bogdanp$elm_datepicker$DatePicker$subDay(x);
-					if (A2(_Bogdanp$elm_datepicker$DatePicker$datesEq, y, min)) {
-						return A2(_elm_lang$core$List_ops['::'], y, acc);
+					var _p2 = _p0._1;
+					var _p1 = _p0._0;
+					if (_elm_lang$core$Native_Utils.eq(i, 6)) {
+						var _v1 = 0,
+							_v2 = _p2,
+							_v3 = _elm_lang$core$Native_List.fromArray(
+							[]),
+							_v4 = A2(
+							_elm_lang$core$List_ops['::'],
+							_elm_lang$core$List$reverse(
+								A2(_elm_lang$core$List_ops['::'], _p1, racc)),
+							acc);
+						i = _v1;
+						xs = _v2;
+						racc = _v3;
+						acc = _v4;
+						continue go;
 					} else {
-						var _v6 = y,
-							_v7 = A2(_elm_lang$core$List_ops['::'], y, acc);
-						x = _v6;
-						acc = _v7;
+						var _v5 = i + 1,
+							_v6 = _p2,
+							_v7 = A2(_elm_lang$core$List_ops['::'], _p1, racc),
+							_v8 = acc;
+						i = _v5;
+						xs = _v6;
+						racc = _v7;
+						acc = _v8;
 						continue go;
 					}
 				}
-			});
-		return A2(
-			go,
-			max,
-			_elm_lang$core$Native_List.fromArray(
-				[]));
-	});
-var _Bogdanp$elm_datepicker$DatePicker$trimDates = function (dates) {
-	var dr = function (dates) {
-		dr:
-		while (true) {
-			var _p6 = dates;
-			if (_p6.ctor === '[]') {
-				return _elm_lang$core$Native_List.fromArray(
-					[]);
-			} else {
-				if (_elm_lang$core$Native_Utils.eq(
-					_elm_lang$core$Date$dayOfWeek(_p6._0),
-					_elm_lang$core$Date$Sat)) {
-					return dates;
-				} else {
-					var _v9 = _p6._1;
-					dates = _v9;
-					continue dr;
-				}
 			}
-		}
-	};
-	var dl = function (dates) {
-		dl:
-		while (true) {
-			var _p7 = dates;
-			if (_p7.ctor === '[]') {
-				return _elm_lang$core$Native_List.fromArray(
-					[]);
-			} else {
-				if (_elm_lang$core$Native_Utils.eq(
-					_elm_lang$core$Date$dayOfWeek(_p7._0),
-					_elm_lang$core$Date$Sun)) {
-					return dates;
-				} else {
-					var _v11 = _p7._1;
-					dates = _v11;
-					continue dl;
-				}
-			}
-		}
-	};
-	return _elm_lang$core$List$reverse(
-		dr(
-			_elm_lang$core$List$reverse(
-				dl(dates))));
-};
-var _Bogdanp$elm_datepicker$DatePicker$formatMonth = function (month) {
-	var _p8 = month;
-	switch (_p8.ctor) {
-		case 'Jan':
-			return 'January';
-		case 'Feb':
-			return 'February';
-		case 'Mar':
-			return 'March';
-		case 'Apr':
-			return 'April';
-		case 'May':
-			return 'May';
-		case 'Jun':
-			return 'June';
-		case 'Jul':
-			return 'July';
-		case 'Aug':
-			return 'August';
-		case 'Sep':
-			return 'September';
-		case 'Oct':
-			return 'October';
-		case 'Nov':
-			return 'November';
-		default:
-			return 'December';
-	}
-};
-var _Bogdanp$elm_datepicker$DatePicker$formatDay = function (day) {
-	var _p9 = day;
-	switch (_p9.ctor) {
-		case 'Mon':
-			return 'Mo';
-		case 'Tue':
-			return 'Tu';
-		case 'Wed':
-			return 'We';
-		case 'Thu':
-			return 'Th';
-		case 'Fri':
-			return 'Fr';
-		case 'Sat':
-			return 'Sa';
-		default:
-			return 'Su';
-	}
-};
-var _Bogdanp$elm_datepicker$DatePicker$formatDate = function (date) {
-	return A2(
-		_elm_lang$core$Basics_ops['++'],
-		_elm_lang$core$Basics$toString(
-			_elm_lang$core$Date$year(date)),
-		A2(
-			_elm_lang$core$Basics_ops['++'],
-			'/',
-			A2(
-				_elm_lang$core$Basics_ops['++'],
-				_Bogdanp$elm_datepicker$DatePicker$monthToString(
-					_elm_lang$core$Date$month(date)),
-				A2(
-					_elm_lang$core$Basics_ops['++'],
-					'/',
-					_Bogdanp$elm_datepicker$DatePicker$dayToString(
-						_elm_lang$core$Date$day(date))))));
+		});
+	return A4(
+		go,
+		0,
+		dates,
+		_elm_lang$core$Native_List.fromArray(
+			[]),
+		_elm_lang$core$Native_List.fromArray(
+			[]));
 };
 var _Bogdanp$elm_datepicker$DatePicker$classList$ = F2(
-	function (_p10, cs) {
-		var _p11 = _p10;
+	function (_p3, cs) {
+		var _p4 = _p3;
 		return _elm_lang$html$Html_Attributes$classList(
 			A2(
 				_elm_lang$core$List$map,
-				function (_p12) {
-					var _p13 = _p12;
+				function (_p5) {
+					var _p6 = _p5;
 					return {
 						ctor: '_Tuple2',
-						_0: A2(_elm_lang$core$Basics_ops['++'], _p11.classNamespace, _p13._0),
-						_1: _p13._1
+						_0: A2(_elm_lang$core$Basics_ops['++'], _p4.classNamespace, _p6._0),
+						_1: _p6._1
 					};
 				},
 				cs));
 	});
 var _Bogdanp$elm_datepicker$DatePicker$class$ = F2(
-	function (_p14, c) {
-		var _p15 = _p14;
+	function (_p7, c) {
+		var _p8 = _p7;
 		return _elm_lang$html$Html_Attributes$class(
-			A2(_elm_lang$core$Basics_ops['++'], _p15.classNamespace, c));
+			A2(_elm_lang$core$Basics_ops['++'], _p8.classNamespace, c));
 	});
 var _Bogdanp$elm_datepicker$DatePicker$prepareDates = F2(
-	function (date, model) {
+	function (date, _p9) {
+		var _p10 = _p9;
 		var end = A2(
-			_Bogdanp$elm_datepicker$DatePicker$addDays,
+			_Bogdanp$elm_datepicker$DatePicker_Date$addDays,
 			6,
-			_Bogdanp$elm_datepicker$DatePicker$nextMonth(date));
+			_Bogdanp$elm_datepicker$DatePicker_Date$nextMonth(date));
 		var start = A2(
-			_Bogdanp$elm_datepicker$DatePicker$subDays,
+			_Bogdanp$elm_datepicker$DatePicker_Date$subDays,
 			6,
-			_Bogdanp$elm_datepicker$DatePicker$firstOfMonth(date));
-		var dates = A2(_Bogdanp$elm_datepicker$DatePicker$datesInRange, start, end);
+			_Bogdanp$elm_datepicker$DatePicker_Date$firstOfMonth(date));
 		return _elm_lang$core$Native_Utils.update(
-			model,
+			_p10,
 			{
 				currentMonth: date,
-				currentDates: _Bogdanp$elm_datepicker$DatePicker$trimDates(dates)
+				currentDates: A3(_Bogdanp$elm_datepicker$DatePicker_Date$datesInRange, _p10.settings.firstDayOfWeek, start, end)
 			});
 	});
 var _Bogdanp$elm_datepicker$DatePicker$defaultSettings = {
 	placeholder: 'Please pick a date...',
 	classNamespace: 'elm-datepicker--',
 	isDisabled: _elm_lang$core$Basics$always(false),
-	dateFormatter: _Bogdanp$elm_datepicker$DatePicker$formatDate,
-	dayFormatter: _Bogdanp$elm_datepicker$DatePicker$formatDay,
-	monthFormatter: _Bogdanp$elm_datepicker$DatePicker$formatMonth,
+	dateFormatter: _Bogdanp$elm_datepicker$DatePicker_Date$formatDate,
+	dayFormatter: _Bogdanp$elm_datepicker$DatePicker_Date$formatDay,
+	monthFormatter: _Bogdanp$elm_datepicker$DatePicker_Date$formatMonth,
+	yearFormatter: _elm_lang$core$Basics$toString,
+	firstDayOfWeek: _elm_lang$core$Date$Sun,
 	pickedDate: _elm_lang$core$Maybe$Nothing
 };
-var _Bogdanp$elm_datepicker$DatePicker$Settings = F7(
-	function (a, b, c, d, e, f, g) {
-		return {placeholder: a, classNamespace: b, isDisabled: c, dateFormatter: d, dayFormatter: e, monthFormatter: f, pickedDate: g};
+var _Bogdanp$elm_datepicker$DatePicker$Settings = F9(
+	function (a, b, c, d, e, f, g, h, i) {
+		return {placeholder: a, classNamespace: b, isDisabled: c, dateFormatter: d, dayFormatter: e, monthFormatter: f, yearFormatter: g, firstDayOfWeek: h, pickedDate: i};
 	});
 var _Bogdanp$elm_datepicker$DatePicker$Model = F7(
 	function (a, b, c, d, e, f, g) {
@@ -8139,69 +8266,35 @@ var _Bogdanp$elm_datepicker$DatePicker$Pick = function (a) {
 };
 var _Bogdanp$elm_datepicker$DatePicker$PrevMonth = {ctor: 'PrevMonth'};
 var _Bogdanp$elm_datepicker$DatePicker$NextMonth = {ctor: 'NextMonth'};
-var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
-	var _p17 = _p16;
-	var _p24 = _p17.settings;
-	var _p23 = _p17.currentMonth;
+var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p11) {
+	var _p12 = _p11;
+	var _p16 = _p12.settings;
+	var _p15 = _p12.currentMonth;
 	var onPicker = function (ev) {
-		return function (_p18) {
+		return function (_p13) {
 			return A3(
 				_elm_lang$html$Html_Events$onWithOptions,
 				ev,
 				{preventDefault: true, stopPropagation: true},
-				_elm_lang$core$Json_Decode$succeed(_p18));
+				_elm_lang$core$Json_Decode$succeed(_p13));
 		};
 	};
 	var picked = function (d) {
-		var _p19 = _p17.pickedDate;
-		if (_p19.ctor === 'Nothing') {
-			return A2(_Bogdanp$elm_datepicker$DatePicker$datesEq, d, _p17.today);
+		var _p14 = _p12.pickedDate;
+		if (_p14.ctor === 'Nothing') {
+			return _elm_lang$core$Native_Utils.eq(
+				_Bogdanp$elm_datepicker$DatePicker_Date$dateTuple(d),
+				_Bogdanp$elm_datepicker$DatePicker_Date$dateTuple(_p12.today));
 		} else {
-			return A2(_Bogdanp$elm_datepicker$DatePicker$datesEq, d, _p19._0);
+			return _elm_lang$core$Native_Utils.eq(
+				_Bogdanp$elm_datepicker$DatePicker_Date$dateTuple(d),
+				_Bogdanp$elm_datepicker$DatePicker_Date$dateTuple(_p14._0));
 		}
 	};
-	var rows = F4(
-		function (i, xs, racc, acc) {
-			rows:
-			while (true) {
-				var _p20 = xs;
-				if (_p20.ctor === '[]') {
-					return _elm_lang$core$List$reverse(acc);
-				} else {
-					var _p22 = _p20._1;
-					var _p21 = _p20._0;
-					if (_elm_lang$core$Native_Utils.eq(i, 6)) {
-						var _v20 = 0,
-							_v21 = _p22,
-							_v22 = _elm_lang$core$Native_List.fromArray(
-							[]),
-							_v23 = A2(
-							_elm_lang$core$List_ops['::'],
-							_elm_lang$core$List$reverse(
-								A2(_elm_lang$core$List_ops['::'], _p21, racc)),
-							acc);
-						i = _v20;
-						xs = _v21;
-						racc = _v22;
-						acc = _v23;
-						continue rows;
-					} else {
-						var _v24 = i + 1,
-							_v25 = _p22,
-							_v26 = A2(_elm_lang$core$List_ops['::'], _p21, racc),
-							_v27 = acc;
-						i = _v24;
-						xs = _v25;
-						racc = _v26;
-						acc = _v27;
-						continue rows;
-					}
-				}
-			}
-		});
-	var classList = _Bogdanp$elm_datepicker$DatePicker$classList$(_p24);
+	var firstDay = _p16.firstDayOfWeek;
+	var classList = _Bogdanp$elm_datepicker$DatePicker$classList$(_p16);
 	var day = function (d) {
-		var disabled = _p24.isDisabled(d);
+		var disabled = _p16.isDisabled(d);
 		var props = _elm_lang$core$Basics$not(disabled) ? _elm_lang$core$Native_List.fromArray(
 			[
 				_elm_lang$html$Html_Events$onClick(
@@ -8228,7 +8321,7 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 								ctor: '_Tuple2',
 								_0: 'other-month',
 								_1: !_elm_lang$core$Native_Utils.eq(
-									_elm_lang$core$Date$month(_p23),
+									_elm_lang$core$Date$month(_p15),
 									_elm_lang$core$Date$month(d))
 							}
 							]))
@@ -8241,7 +8334,21 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 						_elm_lang$core$Date$day(d)))
 				]));
 	};
-	var $class = _Bogdanp$elm_datepicker$DatePicker$class$(_p24);
+	var $class = _Bogdanp$elm_datepicker$DatePicker$class$(_p16);
+	var arrow = F2(
+		function (className, message) {
+			return A2(
+				_elm_lang$html$Html$a,
+				_elm_lang$core$Native_List.fromArray(
+					[
+						$class(className),
+						_elm_lang$html$Html_Attributes$href('javascript:;'),
+						_elm_lang$html$Html_Events$onClick(message),
+						_elm_lang$html$Html_Attributes$tabindex(-1)
+					]),
+				_elm_lang$core$Native_List.fromArray(
+					[]));
+		});
 	var dow = function (d) {
 		return A2(
 			_elm_lang$html$Html$td,
@@ -8252,7 +8359,7 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 			_elm_lang$core$Native_List.fromArray(
 				[
 					_elm_lang$html$Html$text(
-					_p24.dayFormatter(d))
+					_p16.dayFormatter(d))
 				]));
 	};
 	var row = function (days) {
@@ -8267,14 +8374,7 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 	var days = A2(
 		_elm_lang$core$List$map,
 		row,
-		A4(
-			rows,
-			0,
-			_p17.currentDates,
-			_elm_lang$core$Native_List.fromArray(
-				[]),
-			_elm_lang$core$Native_List.fromArray(
-				[])));
+		_Bogdanp$elm_datepicker$DatePicker$groupDates(_p12.currentDates));
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -8301,17 +8401,7 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								A2(
-								_elm_lang$html$Html$a,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										$class('prev'),
-										_elm_lang$html$Html_Attributes$href('javascript:;'),
-										_elm_lang$html$Html_Events$onClick(_Bogdanp$elm_datepicker$DatePicker$PrevMonth),
-										_elm_lang$html$Html_Attributes$tabindex(-1)
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[]))
+								A2(arrow, 'prev', _Bogdanp$elm_datepicker$DatePicker$PrevMonth)
 							])),
 						A2(
 						_elm_lang$html$Html$div,
@@ -8330,8 +8420,8 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 								_elm_lang$core$Native_List.fromArray(
 									[
 										_elm_lang$html$Html$text(
-										_p24.monthFormatter(
-											_elm_lang$core$Date$month(_p23)))
+										_p16.monthFormatter(
+											_elm_lang$core$Date$month(_p15)))
 									])),
 								A2(
 								_elm_lang$html$Html$span,
@@ -8342,8 +8432,8 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 								_elm_lang$core$Native_List.fromArray(
 									[
 										_elm_lang$html$Html$text(
-										_elm_lang$core$Basics$toString(
-											_elm_lang$core$Date$year(_p23)))
+										_p16.yearFormatter(
+											_elm_lang$core$Date$year(_p15)))
 									]))
 							])),
 						A2(
@@ -8354,17 +8444,7 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 							]),
 						_elm_lang$core$Native_List.fromArray(
 							[
-								A2(
-								_elm_lang$html$Html$a,
-								_elm_lang$core$Native_List.fromArray(
-									[
-										$class('next'),
-										_elm_lang$html$Html_Attributes$href('javascript:;'),
-										_elm_lang$html$Html_Events$onClick(_Bogdanp$elm_datepicker$DatePicker$NextMonth),
-										_elm_lang$html$Html_Attributes$tabindex(-1)
-									]),
-								_elm_lang$core$Native_List.fromArray(
-									[]))
+								A2(arrow, 'next', _Bogdanp$elm_datepicker$DatePicker$NextMonth)
 							]))
 					])),
 				A2(
@@ -8389,13 +8469,19 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 									[]),
 								_elm_lang$core$Native_List.fromArray(
 									[
-										dow(_elm_lang$core$Date$Sun),
-										dow(_elm_lang$core$Date$Mon),
-										dow(_elm_lang$core$Date$Tue),
-										dow(_elm_lang$core$Date$Wed),
-										dow(_elm_lang$core$Date$Thu),
-										dow(_elm_lang$core$Date$Fri),
-										dow(_elm_lang$core$Date$Sat)
+										dow(firstDay),
+										dow(
+										A2(_Bogdanp$elm_datepicker$DatePicker_Date$addDows, 1, firstDay)),
+										dow(
+										A2(_Bogdanp$elm_datepicker$DatePicker_Date$addDows, 2, firstDay)),
+										dow(
+										A2(_Bogdanp$elm_datepicker$DatePicker_Date$addDows, 3, firstDay)),
+										dow(
+										A2(_Bogdanp$elm_datepicker$DatePicker_Date$addDows, 4, firstDay)),
+										dow(
+										A2(_Bogdanp$elm_datepicker$DatePicker_Date$addDows, 5, firstDay)),
+										dow(
+										A2(_Bogdanp$elm_datepicker$DatePicker_Date$addDows, 6, firstDay))
 									]))
 							])),
 						A2(
@@ -8408,10 +8494,10 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p16) {
 					]))
 			]));
 };
-var _Bogdanp$elm_datepicker$DatePicker$view = function (_p25) {
-	var _p26 = _p25;
-	var _p28 = _p26._0.settings;
-	var $class = _Bogdanp$elm_datepicker$DatePicker$class$(_p28);
+var _Bogdanp$elm_datepicker$DatePicker$view = function (_p17) {
+	var _p18 = _p17;
+	var _p20 = _p18._0.settings;
+	var $class = _Bogdanp$elm_datepicker$DatePicker$class$(_p20);
 	var inputCommon = function (xs) {
 		return A2(
 			_elm_lang$html$Html$input,
@@ -8434,19 +8520,19 @@ var _Bogdanp$elm_datepicker$DatePicker$view = function (_p25) {
 				[]));
 	};
 	var dateInput = function () {
-		var _p27 = _p26._0.pickedDate;
-		if (_p27.ctor === 'Nothing') {
+		var _p19 = _p18._0.pickedDate;
+		if (_p19.ctor === 'Nothing') {
 			return inputCommon(
 				_elm_lang$core$Native_List.fromArray(
 					[
-						_elm_lang$html$Html_Attributes$placeholder(_p28.placeholder)
+						_elm_lang$html$Html_Attributes$placeholder(_p20.placeholder)
 					]));
 		} else {
 			return inputCommon(
 				_elm_lang$core$Native_List.fromArray(
 					[
 						_elm_lang$html$Html_Attributes$value(
-						_p28.dateFormatter(_p27._0))
+						_p20.dateFormatter(_p19._0))
 					]));
 		}
 	}();
@@ -8459,7 +8545,7 @@ var _Bogdanp$elm_datepicker$DatePicker$view = function (_p25) {
 		_elm_lang$core$Native_List.fromArray(
 			[
 				dateInput,
-				_p26._0.open ? _Bogdanp$elm_datepicker$DatePicker$datePicker(_p26._0) : _elm_lang$html$Html$text('')
+				_p18._0.open ? _Bogdanp$elm_datepicker$DatePicker$datePicker(_p18._0) : _elm_lang$html$Html$text('')
 			]));
 };
 var _Bogdanp$elm_datepicker$DatePicker$CurrentDate = function (a) {
@@ -8469,7 +8555,7 @@ var _Bogdanp$elm_datepicker$DatePicker$DatePicker = function (a) {
 	return {ctor: 'DatePicker', _0: a};
 };
 var _Bogdanp$elm_datepicker$DatePicker$init = function (settings) {
-	var date = A2(_elm_lang$core$Maybe$withDefault, _Bogdanp$elm_datepicker$DatePicker$initDate, settings.pickedDate);
+	var date = A2(_Bogdanp$elm_datepicker$DatePicker_ops['?>'], settings.pickedDate, _Bogdanp$elm_datepicker$DatePicker_Date$initDate);
 	return {
 		ctor: '_Tuple2',
 		_0: _Bogdanp$elm_datepicker$DatePicker$DatePicker(
@@ -8479,8 +8565,8 @@ var _Bogdanp$elm_datepicker$DatePicker$init = function (settings) {
 				{
 					open: false,
 					forceOpen: false,
-					today: _Bogdanp$elm_datepicker$DatePicker$initDate,
-					currentMonth: _Bogdanp$elm_datepicker$DatePicker$initDate,
+					today: _Bogdanp$elm_datepicker$DatePicker_Date$initDate,
+					currentMonth: _Bogdanp$elm_datepicker$DatePicker_Date$initDate,
 					currentDates: _elm_lang$core$Native_List.fromArray(
 						[]),
 					pickedDate: settings.pickedDate,
@@ -8489,7 +8575,7 @@ var _Bogdanp$elm_datepicker$DatePicker$init = function (settings) {
 		_1: A3(
 			_elm_lang$core$Task$perform,
 			_elm_lang$core$Basics$always(
-				_Bogdanp$elm_datepicker$DatePicker$CurrentDate(_Bogdanp$elm_datepicker$DatePicker$initDate)),
+				_Bogdanp$elm_datepicker$DatePicker$CurrentDate(_Bogdanp$elm_datepicker$DatePicker_Date$initDate)),
 			_Bogdanp$elm_datepicker$DatePicker$CurrentDate,
 			_elm_lang$core$Date$now)
 	};
@@ -8505,21 +8591,23 @@ _Bogdanp$elm_datepicker$DatePicker_ops['!'] = F2(
 		};
 	});
 var _Bogdanp$elm_datepicker$DatePicker$update = F2(
-	function (msg, _p29) {
-		var _p30 = _p29;
-		var _p37 = _p30._0;
-		var _p31 = msg;
-		switch (_p31.ctor) {
+	function (msg, _p21) {
+		var _p22 = _p21;
+		var _p31 = _p22._0.pickedDate;
+		var _p30 = _p22._0;
+		var _p29 = _p22._0.currentMonth;
+		var _p23 = msg;
+		switch (_p23.ctor) {
 			case 'CurrentDate':
-				var _p32 = _p31._0;
+				var _p24 = _p23._0;
 				return A2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					A2(
 						_Bogdanp$elm_datepicker$DatePicker$prepareDates,
-						A2(_elm_lang$core$Maybe$withDefault, _p32, _p37.pickedDate),
+						A2(_Bogdanp$elm_datepicker$DatePicker_ops['?>'], _p31, _p24),
 						_elm_lang$core$Native_Utils.update(
-							_p37,
-							{today: _p32})),
+							_p30,
+							{today: _p24})),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'NextMonth':
@@ -8527,8 +8615,8 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					A2(
 						_Bogdanp$elm_datepicker$DatePicker$prepareDates,
-						_Bogdanp$elm_datepicker$DatePicker$nextMonth(_p37.currentMonth),
-						_p37),
+						_Bogdanp$elm_datepicker$DatePicker_Date$nextMonth(_p29),
+						_p30),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'PrevMonth':
@@ -8536,32 +8624,32 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					A2(
 						_Bogdanp$elm_datepicker$DatePicker$prepareDates,
-						_Bogdanp$elm_datepicker$DatePicker$prevMonth(_p37.currentMonth),
-						_p37),
+						_Bogdanp$elm_datepicker$DatePicker_Date$prevMonth(_p29),
+						_p30),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'Pick':
-				var _p33 = _p31._0;
+				var _p25 = _p23._0;
 				return {
 					ctor: '_Tuple3',
 					_0: _Bogdanp$elm_datepicker$DatePicker$DatePicker(
 						A2(
 							_Bogdanp$elm_datepicker$DatePicker$prepareDates,
-							_p33,
+							_p25,
 							_elm_lang$core$Native_Utils.update(
-								_p37,
+								_p30,
 								{
-									pickedDate: _elm_lang$core$Maybe$Just(_p33),
+									pickedDate: _elm_lang$core$Maybe$Just(_p25),
 									open: false
 								}))),
 					_1: _elm_lang$core$Platform_Cmd$none,
-					_2: _elm_lang$core$Maybe$Just(_p33)
+					_2: _elm_lang$core$Maybe$Just(_p25)
 				};
 			case 'Focus':
 				return A2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					_elm_lang$core$Native_Utils.update(
-						_p37,
+						_p30,
 						{open: true, forceOpen: false}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
@@ -8569,27 +8657,27 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 				return A2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					_elm_lang$core$Native_Utils.update(
-						_p37,
-						{open: _p37.forceOpen}),
+						_p30,
+						{open: _p22._0.forceOpen}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
 			case 'Change':
-				var _p34 = function () {
-					var _p35 = _elm_lang$core$Date$fromString(_p31._0);
-					if (_p35.ctor === 'Err') {
-						return {ctor: '_Tuple2', _0: false, _1: _p37.pickedDate};
+				var _p26 = function () {
+					var _p27 = _elm_lang$core$Date$fromString(_p23._0);
+					if (_p27.ctor === 'Err') {
+						return {ctor: '_Tuple2', _0: false, _1: _p31};
 					} else {
-						var _p36 = _p35._0;
-						return _p37.settings.isDisabled(_p36) ? {ctor: '_Tuple2', _0: false, _1: _p37.pickedDate} : {
+						var _p28 = _p27._0;
+						return _p22._0.settings.isDisabled(_p28) ? {ctor: '_Tuple2', _0: false, _1: _p31} : {
 							ctor: '_Tuple2',
 							_0: true,
-							_1: _elm_lang$core$Maybe$Just(_p36)
+							_1: _elm_lang$core$Maybe$Just(_p28)
 						};
 					}
 				}();
-				var valid = _p34._0;
-				var pickedDate = _p34._1;
-				var month = A2(_elm_lang$core$Maybe$withDefault, _p37.currentMonth, pickedDate);
+				var valid = _p26._0;
+				var pickedDate = _p26._1;
+				var month = A2(_Bogdanp$elm_datepicker$DatePicker_ops['?>'], pickedDate, _p29);
 				return {
 					ctor: '_Tuple3',
 					_0: _Bogdanp$elm_datepicker$DatePicker$DatePicker(
@@ -8597,7 +8685,7 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 							_Bogdanp$elm_datepicker$DatePicker$prepareDates,
 							month,
 							_elm_lang$core$Native_Utils.update(
-								_p37,
+								_p30,
 								{pickedDate: pickedDate}))),
 					_1: _elm_lang$core$Platform_Cmd$none,
 					_2: valid ? pickedDate : _elm_lang$core$Maybe$Nothing
@@ -8606,7 +8694,7 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 				return A2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					_elm_lang$core$Native_Utils.update(
-						_p37,
+						_p30,
 						{forceOpen: true}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
@@ -8614,7 +8702,7 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 				return A2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
 					_elm_lang$core$Native_Utils.update(
-						_p37,
+						_p30,
 						{forceOpen: false}),
 					_elm_lang$core$Native_List.fromArray(
 						[]));
@@ -8776,9 +8864,7 @@ var _Bogdanp$elm_datepicker$Simple$main = {
 			init: _Bogdanp$elm_datepicker$Simple$init,
 			update: _Bogdanp$elm_datepicker$Simple$update,
 			view: _Bogdanp$elm_datepicker$Simple$view,
-			subscriptions: function (_p10) {
-				return _elm_lang$core$Platform_Sub$none;
-			}
+			subscriptions: _elm_lang$core$Basics$always(_elm_lang$core$Platform_Sub$none)
 		})
 };
 
