@@ -8146,41 +8146,63 @@ var _elm_lang$html$Html_Events$Options = F2(
 
 var _Bogdanp$elm_datepicker$DatePicker_ops = _Bogdanp$elm_datepicker$DatePicker_ops || {};
 _Bogdanp$elm_datepicker$DatePicker_ops['?>'] = _elm_lang$core$Basics$flip(_elm_lang$core$Maybe$withDefault);
+var _Bogdanp$elm_datepicker$DatePicker$classList$ = F2(
+	function (_p0, cs) {
+		var _p1 = _p0;
+		return _elm_lang$html$Html_Attributes$classList(
+			A2(
+				_elm_lang$core$List$map,
+				function (_p2) {
+					var _p3 = _p2;
+					return {
+						ctor: '_Tuple2',
+						_0: A2(_elm_lang$core$Basics_ops['++'], _p1.classNamespace, _p3._0),
+						_1: _p3._1
+					};
+				},
+				cs));
+	});
+var _Bogdanp$elm_datepicker$DatePicker$class$ = F2(
+	function (_p4, c) {
+		var _p5 = _p4;
+		return _elm_lang$html$Html_Attributes$class(
+			A2(_elm_lang$core$Basics_ops['++'], _p5.classNamespace, c));
+	});
 var _Bogdanp$elm_datepicker$DatePicker$groupDates = function (dates) {
 	var go = F4(
 		function (i, xs, racc, acc) {
 			go:
 			while (true) {
-				var _p0 = xs;
-				if (_p0.ctor === '[]') {
+				var _p6 = xs;
+				if (_p6.ctor === '[]') {
 					return _elm_lang$core$List$reverse(acc);
 				} else {
-					var _p2 = _p0._1;
-					var _p1 = _p0._0;
+					var _p8 = _p6._1;
+					var _p7 = _p6._0;
 					if (_elm_lang$core$Native_Utils.eq(i, 6)) {
-						var _v1 = 0,
-							_v2 = _p2,
-							_v3 = _elm_lang$core$Native_List.fromArray(
+						var _v4 = 0,
+							_v5 = _p8,
+							_v6 = _elm_lang$core$Native_List.fromArray(
 							[]),
-							_v4 = A2(
+							_v7 = A2(
 							_elm_lang$core$List_ops['::'],
 							_elm_lang$core$List$reverse(
-								A2(_elm_lang$core$List_ops['::'], _p1, racc)),
+								A2(_elm_lang$core$List_ops['::'], _p7, racc)),
 							acc);
-						i = _v1;
-						xs = _v2;
-						racc = _v3;
-						acc = _v4;
+						i = _v4;
+						xs = _v5;
+						racc = _v6;
+						acc = _v7;
 						continue go;
 					} else {
-						var _v5 = i + 1,
-							_v6 = _p2,
-							_v7 = A2(_elm_lang$core$List_ops['::'], _p1, racc),
-							_v8 = acc;
-						i = _v5;
-						xs = _v6;
-						racc = _v7;
-						acc = _v8;
+						var _v8 = i + 1,
+							_v9 = _p8,
+							_v10 = A2(_elm_lang$core$List_ops['::'], _p7, racc),
+							_v11 = acc;
+						i = _v8;
+						xs = _v9;
+						racc = _v10;
+						acc = _v11;
 						continue go;
 					}
 				}
@@ -8195,28 +8217,6 @@ var _Bogdanp$elm_datepicker$DatePicker$groupDates = function (dates) {
 		_elm_lang$core$Native_List.fromArray(
 			[]));
 };
-var _Bogdanp$elm_datepicker$DatePicker$classList$ = F2(
-	function (_p3, cs) {
-		var _p4 = _p3;
-		return _elm_lang$html$Html_Attributes$classList(
-			A2(
-				_elm_lang$core$List$map,
-				function (_p5) {
-					var _p6 = _p5;
-					return {
-						ctor: '_Tuple2',
-						_0: A2(_elm_lang$core$Basics_ops['++'], _p4.classNamespace, _p6._0),
-						_1: _p6._1
-					};
-				},
-				cs));
-	});
-var _Bogdanp$elm_datepicker$DatePicker$class$ = F2(
-	function (_p7, c) {
-		var _p8 = _p7;
-		return _elm_lang$html$Html_Attributes$class(
-			A2(_elm_lang$core$Basics_ops['++'], _p8.classNamespace, c));
-	});
 var _Bogdanp$elm_datepicker$DatePicker$prepareDates = F2(
 	function (date, _p9) {
 		var _p10 = _p9;
@@ -8238,6 +8238,9 @@ var _Bogdanp$elm_datepicker$DatePicker$prepareDates = F2(
 var _Bogdanp$elm_datepicker$DatePicker$defaultSettings = {
 	placeholder: 'Please pick a date...',
 	classNamespace: 'elm-datepicker--',
+	inputClassList: _elm_lang$core$Native_List.fromArray(
+		[]),
+	inputName: _elm_lang$core$Maybe$Nothing,
 	isDisabled: _elm_lang$core$Basics$always(false),
 	dateFormatter: _Bogdanp$elm_datepicker$DatePicker_Date$formatDate,
 	dayFormatter: _Bogdanp$elm_datepicker$DatePicker_Date$formatDay,
@@ -8246,21 +8249,40 @@ var _Bogdanp$elm_datepicker$DatePicker$defaultSettings = {
 	firstDayOfWeek: _elm_lang$core$Date$Sun,
 	pickedDate: _elm_lang$core$Maybe$Nothing
 };
-var _Bogdanp$elm_datepicker$DatePicker$Settings = F9(
-	function (a, b, c, d, e, f, g, h, i) {
-		return {placeholder: a, classNamespace: b, isDisabled: c, dateFormatter: d, dayFormatter: e, monthFormatter: f, yearFormatter: g, firstDayOfWeek: h, pickedDate: i};
-	});
+var _Bogdanp$elm_datepicker$DatePicker$Settings = function (a) {
+	return function (b) {
+		return function (c) {
+			return function (d) {
+				return function (e) {
+					return function (f) {
+						return function (g) {
+							return function (h) {
+								return function (i) {
+									return function (j) {
+										return function (k) {
+											return {placeholder: a, classNamespace: b, inputClassList: c, inputName: d, isDisabled: e, dateFormatter: f, dayFormatter: g, monthFormatter: h, yearFormatter: i, firstDayOfWeek: j, pickedDate: k};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+		};
+	};
+};
 var _Bogdanp$elm_datepicker$DatePicker$Model = F7(
 	function (a, b, c, d, e, f, g) {
 		return {open: a, forceOpen: b, today: c, currentMonth: d, currentDates: e, pickedDate: f, settings: g};
 	});
 var _Bogdanp$elm_datepicker$DatePicker$MouseUp = {ctor: 'MouseUp'};
 var _Bogdanp$elm_datepicker$DatePicker$MouseDown = {ctor: 'MouseDown'};
+var _Bogdanp$elm_datepicker$DatePicker$Blur = {ctor: 'Blur'};
+var _Bogdanp$elm_datepicker$DatePicker$Focus = {ctor: 'Focus'};
 var _Bogdanp$elm_datepicker$DatePicker$Change = function (a) {
 	return {ctor: 'Change', _0: a};
 };
-var _Bogdanp$elm_datepicker$DatePicker$Blur = {ctor: 'Blur'};
-var _Bogdanp$elm_datepicker$DatePicker$Focus = {ctor: 'Focus'};
 var _Bogdanp$elm_datepicker$DatePicker$Pick = function (a) {
 	return {ctor: 'Pick', _0: a};
 };
@@ -8497,7 +8519,17 @@ var _Bogdanp$elm_datepicker$DatePicker$datePicker = function (_p11) {
 var _Bogdanp$elm_datepicker$DatePicker$view = function (_p17) {
 	var _p18 = _p17;
 	var _p20 = _p18._0.settings;
-	var $class = _Bogdanp$elm_datepicker$DatePicker$class$(_p20);
+	var inputClasses = A2(
+		_elm_lang$core$Basics_ops['++'],
+		_elm_lang$core$Native_List.fromArray(
+			[
+				{
+				ctor: '_Tuple2',
+				_0: A2(_elm_lang$core$Basics_ops['++'], _p20.classNamespace, 'input'),
+				_1: true
+			}
+			]),
+		_p20.inputClassList);
 	var inputCommon = function (xs) {
 		return A2(
 			_elm_lang$html$Html$input,
@@ -8505,7 +8537,9 @@ var _Bogdanp$elm_datepicker$DatePicker$view = function (_p17) {
 				_elm_lang$core$Basics_ops['++'],
 				_elm_lang$core$Native_List.fromArray(
 					[
-						$class('input'),
+						_elm_lang$html$Html_Attributes$classList(inputClasses),
+						_elm_lang$html$Html_Attributes$name(
+						A2(_Bogdanp$elm_datepicker$DatePicker_ops['?>'], _p20.inputName, '')),
 						_elm_lang$html$Html_Attributes$type$('text'),
 						A2(
 						_elm_lang$html$Html_Events$on,
@@ -8536,6 +8570,7 @@ var _Bogdanp$elm_datepicker$DatePicker$view = function (_p17) {
 					]));
 		}
 	}();
+	var $class = _Bogdanp$elm_datepicker$DatePicker$class$(_p20);
 	return A2(
 		_elm_lang$html$Html$div,
 		_elm_lang$core$Native_List.fromArray(
@@ -8645,22 +8680,6 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none,
 					_2: _elm_lang$core$Maybe$Just(_p25)
 				};
-			case 'Focus':
-				return A2(
-					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						_p30,
-						{open: true, forceOpen: false}),
-					_elm_lang$core$Native_List.fromArray(
-						[]));
-			case 'Blur':
-				return A2(
-					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
-					_elm_lang$core$Native_Utils.update(
-						_p30,
-						{open: _p22._0.forceOpen}),
-					_elm_lang$core$Native_List.fromArray(
-						[]));
 			case 'Change':
 				var _p26 = function () {
 					var _p27 = _elm_lang$core$Date$fromString(_p23._0);
@@ -8690,6 +8709,22 @@ var _Bogdanp$elm_datepicker$DatePicker$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none,
 					_2: valid ? pickedDate : _elm_lang$core$Maybe$Nothing
 				};
+			case 'Focus':
+				return A2(
+					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						_p30,
+						{open: true, forceOpen: false}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
+			case 'Blur':
+				return A2(
+					_Bogdanp$elm_datepicker$DatePicker_ops['!'],
+					_elm_lang$core$Native_Utils.update(
+						_p30,
+						{open: _p22._0.forceOpen}),
+					_elm_lang$core$Native_List.fromArray(
+						[]));
 			case 'MouseDown':
 				return A2(
 					_Bogdanp$elm_datepicker$DatePicker_ops['!'],

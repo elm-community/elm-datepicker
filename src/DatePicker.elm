@@ -22,7 +22,7 @@ module DatePicker
 import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
-import Html.Attributes exposing (href, placeholder, tabindex, type', value)
+import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type', value)
 import Html.Events exposing (on, onBlur, onClick, onFocus, onWithOptions, targetValue)
 import Json.Decode as Json
 import Task
@@ -35,9 +35,9 @@ type Msg
     | NextMonth
     | PrevMonth
     | Pick Date
+    | Change String
     | Focus
     | Blur
-    | Change String
     | MouseDown
     | MouseUp
 
@@ -47,6 +47,8 @@ type Msg
 type alias Settings =
     { placeholder : String
     , classNamespace : String
+    , inputClassList : List ( String, Bool )
+    , inputName : Maybe String
     , isDisabled : Date -> Bool
     , dateFormatter : Date -> String
     , dayFormatter : Day -> String
@@ -96,6 +98,8 @@ defaultSettings : Settings
 defaultSettings =
     { placeholder = "Please pick a date..."
     , classNamespace = "elm-datepicker--"
+    , inputClassList = []
+    , inputName = Nothing
     , isDisabled = always False
     , dateFormatter = formatDate
     , dayFormatter = formatDay
@@ -181,12 +185,6 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             , Just date
             )
 
-        Focus ->
-            { model | open = True, forceOpen = False } ! []
-
-        Blur ->
-            { model | open = forceOpen } ! []
-
         Change inputDate ->
             let
                 ( valid, pickedDate ) =
@@ -211,6 +209,12 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
                     Nothing
                 )
 
+        Focus ->
+            { model | open = True, forceOpen = False } ! []
+
+        Blur ->
+            { model | open = forceOpen } ! []
+
         MouseDown ->
             { model | forceOpen = True } ! []
 
@@ -226,9 +230,14 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
         class =
             class' settings
 
+        inputClasses =
+            [ ( settings.classNamespace ++ "input", True ) ]
+                ++ settings.inputClassList
+
         inputCommon xs =
             input
-                ([ class "input"
+                ([ Attrs.classList inputClasses
+                 , Attrs.name (settings.inputName ?> "")
                  , type' "text"
                  , on "change" (Json.map Change targetValue)
                  , onBlur Blur
@@ -358,17 +367,6 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
             ]
 
 
-class' : Settings -> String -> Html.Attribute msg
-class' { classNamespace } c =
-    Html.Attributes.class (classNamespace ++ c)
-
-
-classList' : Settings -> List ( String, Bool ) -> Html.Attribute msg
-classList' { classNamespace } cs =
-    List.map (\( c, b ) -> ( classNamespace ++ c, b )) cs
-        |> Html.Attributes.classList
-
-
 {-| Turn a list of dates into a list of date rows with 7 columns per
 row representing each day of the week.
 -}
@@ -387,6 +385,17 @@ groupDates dates =
                         go (i + 1) xs (x :: racc) acc
     in
         go 0 dates [] []
+
+
+class' : Settings -> String -> Html.Attribute msg
+class' { classNamespace } c =
+    Attrs.class (classNamespace ++ c)
+
+
+classList' : Settings -> List ( String, Bool ) -> Html.Attribute msg
+classList' { classNamespace } cs =
+    List.map (\( c, b ) -> ( classNamespace ++ c, b )) cs
+        |> Attrs.classList
 
 
 (!) : Model -> List (Cmd Msg) -> ( DatePicker, Cmd Msg, Maybe Date )
