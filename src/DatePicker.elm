@@ -313,6 +313,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                         [ ( "day", True )
                         , ( "disabled", disabled )
                         , ( "picked", picked d )
+                        , ( "today", dateTuple d == dateTuple today )
                         , ( "other-month", month currentMonth /= month d )
                         ]
                      ]

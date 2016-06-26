@@ -135,6 +135,10 @@ $datepicker-row-border-color: #F2F2F2;
   }
 }
 
+.#{$datepicker-ns}today {
+  font-weight: bold;
+}
+
 .#{$datepicker-ns}other-month {
   color: #AAA;
 
