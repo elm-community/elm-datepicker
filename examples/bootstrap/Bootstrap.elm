@@ -3,8 +3,7 @@ module Bootstrap exposing (main)
 import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings)
 import Html exposing (Html, div, form, h1, input, label, text)
-import Html.App as Html
-import Html.Attributes exposing (class, type', value)
+import Html.Attributes exposing (class, type_, value)
 
 
 type Msg
@@ -21,7 +20,8 @@ init : ( Model, Cmd Msg )
 init =
     let
         isDisabled date =
-            dayOfWeek date `List.member` [ Sat, Sun ]
+            dayOfWeek date
+                |> flip List.member [ Sat, Sun ]
 
         ( datePicker, datePickerFx ) =
             DatePicker.init
@@ -42,7 +42,7 @@ update msg ({ datePicker } as model) =
     case msg of
         ToDatePicker msg ->
             let
-                ( datePicker, datePickerFx, mDate ) =
+                ( newDatePicker, datePickerFx, mDate ) =
                     DatePicker.update msg datePicker
 
                 date =
@@ -55,7 +55,7 @@ update msg ({ datePicker } as model) =
             in
                 { model
                     | date = date
-                    , datePicker = datePicker
+                    , datePicker = newDatePicker
                 }
                     ! [ Cmd.map ToDatePicker datePickerFx ]
 
@@ -70,7 +70,7 @@ view ({ date, datePicker } as model) =
                     |> Html.map ToDatePicker
                 ]
             , input
-                [ type' "submit"
+                [ type_ "submit"
                 , class "btn btn-primary"
                 , value "Submit"
                 ]
@@ -84,7 +84,7 @@ formatDate d =
     toString (month d) ++ " " ++ toString (day d) ++ ", " ++ toString (year d)
 
 
-main : Program Never
+main : Program Never Model Msg
 main =
     Html.program
         { init = init

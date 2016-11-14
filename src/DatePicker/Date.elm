@@ -277,7 +277,10 @@ addDows =
 
 succDow : Date.Day -> Date.Day
 succDow day =
-    dayFromInt (dayToInt day `rem` 7 + 1)
+    dayToInt day
+        |> flip rem 7
+        |> (+) 1
+        |> dayFromInt
 
 
 subDows : Int -> Date.Day -> Date.Day
@@ -289,7 +292,8 @@ predDow : Date.Day -> Date.Day
 predDow day =
     let
         prev =
-            (dayToInt day - 1) `rem` 7
+            (dayToInt day - 1)
+                |> flip rem 7
     in
         if prev == 0 then
             Sun
@@ -374,7 +378,8 @@ predMonth : Month -> Month
 predMonth month =
     let
         prev =
-            (monthToInt month - 1) `rem` 12
+            (monthToInt month - 1)
+                |> flip rem 12
     in
         if prev == 0 then
             Dec
@@ -384,7 +389,10 @@ predMonth month =
 
 succMonth : Month -> Month
 succMonth month =
-    monthFromInt (monthToInt month `rem` 12 + 1)
+    monthToInt month
+        |> flip rem 12
+        |> (+) 1
+        |> monthFromInt
 
 
 monthToInt : Month -> Int
@@ -514,11 +522,8 @@ daysInMonth year month =
 
 
 isLeapYear : Year -> Bool
-isLeapYear year =
-    if year `rem` 100 == 0 then
-        year `rem` 400 == 0
-    else
-        year `rem` 4 == 0
+isLeapYear y =
+    y % 400 == 0 || y % 100 /= 0 && y % 4 == 0
 
 
 mkDate : Year -> Month -> Day -> Date

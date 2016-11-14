@@ -22,7 +22,7 @@ module DatePicker
 import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
-import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type', value)
+import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value)
 import Html.Events exposing (on, onBlur, onClick, onFocus, onWithOptions, targetValue)
 import Json.Decode as Json
 import Task
@@ -128,8 +128,8 @@ init settings =
         date =
             settings.pickedDate ?> initDate
     in
-        ( DatePicker
-            <| prepareDates date
+        ( DatePicker <|
+            prepareDates date
                 { open = False
                 , forceOpen = False
                 , today = initDate
@@ -138,7 +138,7 @@ init settings =
                 , pickedDate = settings.pickedDate
                 , settings = settings
                 }
-        , Task.perform (always <| CurrentDate initDate) CurrentDate Date.now
+        , Task.perform CurrentDate Date.now
         )
 
 
@@ -175,8 +175,8 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             prepareDates (prevMonth currentMonth) model ! []
 
         Pick date ->
-            ( DatePicker
-                <| prepareDates date
+            ( DatePicker <|
+                prepareDates date
                     { model
                         | pickedDate = Just date
                         , open = False
@@ -187,7 +187,7 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
 
         Change inputDate ->
             let
-                ( valid, pickedDate ) =
+                ( valid, newPickedDate ) =
                     case Date.fromString inputDate of
                         Err _ ->
                             ( False, pickedDate )
@@ -199,12 +199,12 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
                                 ( True, Just date )
 
                 month =
-                    pickedDate ?> currentMonth
+                    newPickedDate ?> currentMonth
             in
-                ( DatePicker <| prepareDates month { model | pickedDate = pickedDate }
+                ( DatePicker <| prepareDates month { model | pickedDate = newPickedDate }
                 , Cmd.none
                 , if valid then
-                    pickedDate
+                    newPickedDate
                   else
                     Nothing
                 )
@@ -228,7 +228,7 @@ view : DatePicker -> Html Msg
 view (DatePicker ({ open, pickedDate, settings } as model)) =
     let
         class =
-            class' settings
+            mkClass settings
 
         inputClasses =
             [ ( settings.classNamespace ++ "input", True ) ]
@@ -238,7 +238,7 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
             input
                 ([ Attrs.classList inputClasses
                  , Attrs.name (settings.inputName ?> "")
-                 , type' "text"
+                 , type_ "text"
                  , on "change" (Json.map Change targetValue)
                  , onBlur Blur
                  , onClick Focus
@@ -269,10 +269,10 @@ datePicker : Model -> Html Msg
 datePicker { today, currentMonth, currentDates, pickedDate, settings } =
     let
         class =
-            class' settings
+            mkClass settings
 
         classList =
-            classList' settings
+            mkClassList settings
 
         firstDay =
             settings.firstDayOfWeek
@@ -388,13 +388,13 @@ groupDates dates =
         go 0 dates [] []
 
 
-class' : Settings -> String -> Html.Attribute msg
-class' { classNamespace } c =
+mkClass : Settings -> String -> Html.Attribute msg
+mkClass { classNamespace } c =
     Attrs.class (classNamespace ++ c)
 
 
-classList' : Settings -> List ( String, Bool ) -> Html.Attribute msg
-classList' { classNamespace } cs =
+mkClassList : Settings -> List ( String, Bool ) -> Html.Attribute msg
+mkClassList { classNamespace } cs =
     List.map (\( c, b ) -> ( classNamespace ++ c, b )) cs
         |> Attrs.classList
 
