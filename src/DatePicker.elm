@@ -7,13 +7,15 @@ module DatePicker
         , init
         , update
         , view
+        , getDate
+        , setDate
         )
 
 {-| A customizable date picker component.
 
 # Tea ☕
 @docs Msg, DatePicker
-@docs init, update, view
+@docs init, update, view, getDate, setDate
 
 # Settings
 @docs Settings, defaultSettings
@@ -156,7 +158,18 @@ prepareDates date ({ settings } as model) =
             , currentDates = datesInRange settings.firstDayOfWeek start end
         }
 
+{-|
+Extract the current set date (if set) from a model
+-}
+getDate : Model -> Maybe Date
+getDate model = model.pickedDate
 
+{-|
+Set a new date in the model
+-}
+
+setDate : Date -> Model -> Model
+setDate date model = {model | pickedDate = Just date}
 {-| The date picker update function.  The third value in the returned
 tuple represents the picked date, it is `Nothing` if no date was
 picked or if the previously-picked date has not changed and `Just`
