@@ -9,13 +9,14 @@ module DatePicker
         , view
         , getDate
         , setDate
+        , setValidDate
         )
 
 {-| A customizable date picker component.
 
 # Tea ☕
 @docs Msg, DatePicker
-@docs init, update, view, getDate, setDate
+@docs init, update, view, getDate, setDate, setValidDate
 
 # Settings
 @docs Settings, defaultSettings
@@ -170,6 +171,23 @@ Set a new date in the model
 
 setDate : Date -> Model -> Model
 setDate date model = {model | pickedDate = Just date}
+
+{-|
+Set the function that marks days valid or invalid, so for example if you need to build a date range you can keep those in sync
+
+-}
+
+setValidDate : (Date -> Bool) -> Model -> Model
+setValidDate isDisabled model =
+    let
+        s = model.settings
+        newSettings = {s | isDisabled =  isDisabled}
+    in
+        {model | settings  = newSettings}
+
+
+
+
 {-| The date picker update function.  The third value in the returned
 tuple represents the picked date, it is `Nothing` if no date was
 picked or if the previously-picked date has not changed and `Just`
