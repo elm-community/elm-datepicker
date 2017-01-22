@@ -1,7 +1,7 @@
 {
-    "version": "3.0.2",
+    "version": "1.0.0",
     "summary": "A reusable date picker component",
-    "repository": "https://github.com/Bogdanp/elm-datepicker.git",
+    "repository": "https://github.com/elm-community/elm-datepicker.git",
     "license": "BSD3",
     "source-directories": [
         "examples/simple",
