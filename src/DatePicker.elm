@@ -50,6 +50,7 @@ type alias Settings =
     , inputClassList : List ( String, Bool )
     , inputName : Maybe String
     , isDisabled : Date -> Bool
+    , parser : String -> Result String Date
     , dateFormatter : Date -> String
     , dayFormatter : Day -> String
     , monthFormatter : Month -> String
@@ -101,6 +102,7 @@ defaultSettings =
     , inputClassList = []
     , inputName = Nothing
     , isDisabled = always False
+    , parser = Date.fromString
     , dateFormatter = formatDate
     , dayFormatter = formatDay
     , monthFormatter = formatMonth
@@ -188,7 +190,7 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
         Change inputDate ->
             let
                 ( valid, newPickedDate ) =
-                    case Date.fromString inputDate of
+                    case settings.parser inputDate of
                         Err _ ->
                             ( False, pickedDate )
 
