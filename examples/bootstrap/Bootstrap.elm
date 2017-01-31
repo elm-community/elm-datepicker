@@ -29,6 +29,7 @@ init =
                     | isDisabled = isDisabled
                     , inputClassList = [ ( "form-control", True ) ]
                     , inputName = Just "date"
+                    , inputId = Just "date-field"
                 }
     in
         { date = Nothing

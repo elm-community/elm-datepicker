@@ -49,6 +49,7 @@ type alias Settings =
     , classNamespace : String
     , inputClassList : List ( String, Bool )
     , inputName : Maybe String
+    , inputId : Maybe String
     , isDisabled : Date -> Bool
     , parser : String -> Result String Date
     , dateFormatter : Date -> String
@@ -101,6 +102,7 @@ defaultSettings =
     , classNamespace = "elm-datepicker--"
     , inputClassList = []
     , inputName = Nothing
+    , inputId = Nothing
     , isDisabled = always False
     , parser = Date.fromString
     , dateFormatter = formatDate
@@ -232,6 +234,11 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
         class =
             mkClass settings
 
+        potentialInputId =
+            settings.inputId
+                |> Maybe.map Attrs.id
+                |> (List.singleton >> List.filterMap identity)
+
         inputClasses =
             [ ( settings.classNamespace ++ "input", True ) ]
                 ++ settings.inputClassList
@@ -246,6 +253,7 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
                  , onClick Focus
                  , onFocus Focus
                  ]
+                    ++ potentialInputId
                     ++ xs
                 )
                 []
