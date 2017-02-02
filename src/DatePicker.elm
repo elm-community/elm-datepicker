@@ -163,33 +163,37 @@ prepareDates date ({ settings } as model) =
             , currentDates = datesInRange settings.firstDayOfWeek start end
         }
 
+
 {-|
 Extract the current set date (if set) from a model
 -}
 getDate : Model -> Maybe Date
-getDate model = model.pickedDate
+getDate model =
+    model.pickedDate
+
 
 {-|
 Set a new date in the model
 -}
-
 setDate : Date -> Model -> Model
-setDate date model = {model | pickedDate = Just date}
+setDate date model =
+    { model | pickedDate = Just date }
+
 
 {-|
 Set the function that marks days valid or invalid, so for example if you need to build a date range you can keep those in sync
 
 -}
-
 setFilter : (Date -> Bool) -> Model -> Model
 setFilter isDisabled model =
     let
-        s = model.settings
-        newSettings = {s | isDisabled =  isDisabled}
+        s =
+            model.settings
+
+        newSettings =
+            { s | isDisabled = isDisabled }
     in
-        {model | settings  = newSettings}
-
-
+        { model | settings = newSettings }
 
 
 {-| The date picker update function.  The third value in the returned
