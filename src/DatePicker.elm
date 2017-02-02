@@ -9,14 +9,14 @@ module DatePicker
         , view
         , getDate
         , setDate
-        , setValidDate
+        , setFilter
         )
 
 {-| A customizable date picker component.
 
 # Tea ☕
 @docs Msg, DatePicker
-@docs init, update, view, getDate, setDate, setValidDate
+@docs init, update, view, getDate, setDate, setFilter
 
 # Settings
 @docs Settings, defaultSettings
@@ -177,8 +177,8 @@ Set the function that marks days valid or invalid, so for example if you need to
 
 -}
 
-setValidDate : (Date -> Bool) -> Model -> Model
-setValidDate isDisabled model =
+setFilter : (Date -> Bool) -> Model -> Model
+setFilter isDisabled model =
     let
         s = model.settings
         newSettings = {s | isDisabled =  isDisabled}
