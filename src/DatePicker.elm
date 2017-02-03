@@ -59,6 +59,7 @@ type alias Settings =
     , dayFormatter : Day -> String
     , monthFormatter : Month -> String
     , yearFormatter : Int -> String
+    , cellFormatter : String -> Html Msg
     , firstDayOfWeek : Day
     , pickedDate : Maybe Date
     }
@@ -112,9 +113,15 @@ defaultSettings =
     , dayFormatter = formatDay
     , monthFormatter = formatMonth
     , yearFormatter = toString
+    , cellFormatter = formatCell
     , firstDayOfWeek = Sun
     , pickedDate = Nothing
     }
+
+
+formatCell : String -> Html Msg
+formatCell day =
+    text day
 
 
 {-| Initialize a DatePicker given a Settings record.  You must execute
@@ -364,7 +371,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                      ]
                         ++ props
                     )
-                    [ text <| toString <| Date.day d ]
+                    [ settings.cellFormatter <| toString <| Date.day d ]
 
         row days =
             tr [ class "row" ] (List.map day days)
