@@ -10,13 +10,14 @@ module DatePicker
         , getDate
         , setDate
         , setFilter
+        , isOpen
         )
 
 {-| A customizable date picker component.
 
 # Tea ☕
 @docs Msg, DatePicker
-@docs init, update, view, getDate, setDate, setFilter
+@docs init, update, view, getDate, setDate, setFilter, isOpen
 
 # Settings
 @docs Settings, defaultSettings
@@ -170,29 +171,34 @@ prepareDates date ({ settings } as model) =
             , currentDates = datesInRange settings.firstDayOfWeek start end
         }
 
-
 {-|
-Extract the current set date (if set) from a model
+Extract the current set date (if set) from a datepicker
 -}
-getDate : Model -> Maybe Date
-getDate model =
+getDate : DatePicker -> Maybe Date
+getDate (DatePicker model) =
     model.pickedDate
 
 
 {-|
-Set a new date in the model
+Set a new date in the datepicker
 -}
-setDate : Date -> Model -> Model
-setDate date model =
-    { model | pickedDate = Just date }
+setDate : Date -> DatePicker -> DatePicker
+setDate date (DatePicker model) =
+    DatePicker { model | pickedDate = Just date }
 
+{-|
+Expose if the datepicker is open
+-}
+isOpen : DatePicker -> Bool
+isOpen (DatePicker model) =
+    model.open
 
 {-|
 Set the function that marks days valid or invalid, so for example if you need to build a date range you can keep those in sync
 
 -}
-setFilter : (Date -> Bool) -> Model -> Model
-setFilter isDisabled model =
+setFilter : (Date -> Bool) -> DatePicker -> DatePicker
+setFilter isDisabled (DatePicker model) =
     let
         s =
             model.settings
@@ -200,7 +206,7 @@ setFilter isDisabled model =
         newSettings =
             { s | isDisabled = isDisabled }
     in
-        { model | settings = newSettings }
+        DatePicker { model | settings = newSettings }
 
 
 {-| The date picker update function.  The third value in the returned
