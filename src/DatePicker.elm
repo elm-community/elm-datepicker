@@ -224,7 +224,6 @@ deriveDateFromText ({ currentMonth, forceOpen, inputText, pickedDate, settings }
                 |> Result.toMaybe
 
         newDate =
-            -- WTB Maybe.mapNothing! I.e. flattened withDefault
             case parsed of
                 Nothing ->
                     pickedDate
