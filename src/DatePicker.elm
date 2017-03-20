@@ -69,7 +69,6 @@ type alias Settings =
 type alias Model =
     { open : Bool
     , forceOpen : Bool
-    , editing : Bool
     , today : Date
     , currentMonth : Date
     , currentDates : List Date
@@ -149,7 +148,6 @@ init settings =
             prepareDates date
                 { open = False
                 , forceOpen = False
-                , editing = False
                 , today = initDate
                 , currentMonth = initDate
                 , currentDates = []
@@ -219,10 +217,10 @@ setFilter isDisabled (DatePicker model) =
 {-| Attempt to set pickedDate from the state of text
 -}
 deriveDateFromText : Model -> ( Model, Maybe Date )
-deriveDateFromText ({ currentMonth, forceOpen, pickedDate, settings } as model) =
+deriveDateFromText ({ currentMonth, forceOpen, inputText, pickedDate, settings } as model) =
     let
         parsed =
-            settings.parser model.inputText
+            settings.parser inputText
                 |> Result.toMaybe
 
         newDate =
@@ -276,19 +274,11 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             )
 
         Text text ->
-            let
-                ( model__, newPickedDate ) =
-                    deriveDateFromText { model | inputText = text }
-            in
-                ( DatePicker model__
-                , Cmd.none
-                , newPickedDate
-                )
+            { model | inputText = text } ! []
 
         Focus ->
             { model
-                | editing = True
-                , open = True
+                | open = True
                 , forceOpen = False
                 , inputText =
                     pickedDate
@@ -298,15 +288,21 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
                 ! []
 
         Blur ->
-            { model
-                | open = forceOpen
-                , editing = False
-                , inputText =
-                    pickedDate
-                        |> Maybe.map settings.dateFormatter
-                        |> Maybe.withDefault ""
-            }
-                ! []
+            let
+                ( withDate, newPickedDate ) =
+                    deriveDateFromText model
+            in
+                ( DatePicker
+                    { withDate
+                        | open = forceOpen
+                        , inputText =
+                            withDate.pickedDate
+                                |> Maybe.map settings.dateFormatter
+                                |> Maybe.withDefault ""
+                    }
+                , Cmd.none
+                , newPickedDate
+                )
 
         MouseDown ->
             { model | forceOpen = True } ! []
@@ -350,13 +346,7 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
         dateInput =
             inputCommon
                 [ placeholder settings.placeholder
-                , value <|
-                    if model.editing then
-                        model.inputText
-                    else
-                        pickedDate
-                            |> Maybe.map settings.dateFormatter
-                            |> Maybe.withDefault model.inputText
+                , value model.inputText
                 ]
     in
         div [ class "container" ]
