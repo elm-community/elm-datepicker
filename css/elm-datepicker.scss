@@ -19,6 +19,7 @@ $datepicker-row-border-color: #F2F2F2;
   position: absolute;
   border: 1px solid $datepicker-border-color;
   z-index: 10;
+  background-color: white;
 }
 
 .#{$datepicker-ns}picker-header,
