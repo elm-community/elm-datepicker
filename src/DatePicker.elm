@@ -263,7 +263,15 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
                 month =
                     newPickedDate ?> currentMonth
             in
-                ( DatePicker <| prepareDates month { model | pickedDate = newPickedDate }
+                ( DatePicker <|
+                    prepareDates month
+                        { model
+                            | pickedDate = newPickedDate
+                            , inputText =
+                                newPickedDate
+                                    |> Maybe.map settings.dateFormatter
+                                    |> Maybe.withDefault ""
+                        }
                 , Cmd.none
                 , if valid then
                     newPickedDate
