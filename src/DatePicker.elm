@@ -191,7 +191,11 @@ Set a new date in the datepicker
 -}
 setDate : Date -> DatePicker -> DatePicker
 setDate date (DatePicker model) =
-    DatePicker { model | pickedDate = Just date }
+    DatePicker
+        { model
+            | pickedDate = Just date
+            , inputText = model.settings.dateFormatter date
+        }
 
 
 {-|
