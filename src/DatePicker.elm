@@ -215,37 +215,6 @@ setFilter isDisabled (DatePicker model) =
         DatePicker { model | settings = newSettings }
 
 
-{-| Attempt to set pickedDate from the state of text.
-    If the date fails to parse, the model will retain its existing date.
-    Returns the result of parsing input text as the second value.
--}
-deriveDateFromText : Model -> ( Model, Maybe Date )
-deriveDateFromText ({ currentMonth, forceOpen, inputText, pickedDate, settings } as model) =
-    let
-        parsed =
-            settings.parser inputText
-                |> Result.toMaybe
-
-        newDate =
-            case parsed of
-                Nothing ->
-                    pickedDate
-
-                date ->
-                    date
-
-        month =
-            newDate ?> currentMonth
-    in
-        ( prepareDates
-            month
-            { model
-                | pickedDate = newDate
-            }
-        , parsed
-        )
-
-
 {-| The date picker update function.  The third value in the returned
 tuple represents the picked date, it is `Nothing` if no date was
 picked or if the previously-picked date has not changed and `Just`
@@ -278,28 +247,32 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
         Text text ->
             { model | inputText = text } ! []
 
-        Focus ->
-            { model
-                | open = True
-                , forceOpen = False
-            }
-                ! []
-
         Change ->
             let
-                ( withDate, newPickedDate ) =
-                    deriveDateFromText model 
+                ( valid, newPickedDate ) =
+                    case settings.parser model.inputText of
+                        Err _ ->
+                            ( False, pickedDate )
+
+                        Ok date ->
+                            if settings.isDisabled date then
+                                ( False, pickedDate )
+                            else
+                                ( True, Just date )
+
+                month =
+                    newPickedDate ?> currentMonth
             in
-                ( DatePicker
-                    { withDate
-                        | inputText =
-                            withDate.pickedDate
-                                |> Maybe.map settings.dateFormatter
-                                |> Maybe.withDefault ""
-                    }
+                ( DatePicker <| prepareDates month { model | pickedDate = newPickedDate }
                 , Cmd.none
-                , newPickedDate
+                , if valid then
+                    newPickedDate
+                  else
+                    Nothing
                 )
+
+        Focus ->
+            { model | open = True, forceOpen = False } ! []
 
         Blur ->
             { model | open = forceOpen } ! []
