@@ -152,7 +152,10 @@ init settings =
                 , today = initDate
                 , currentMonth = initDate
                 , currentDates = []
-                , inputText = ""
+                , inputText =
+                    settings.pickedDate
+                        |> Maybe.map settings.dateFormatter
+                        |> Maybe.withDefault ""
                 , pickedDate = settings.pickedDate
                 , settings = settings
                 }
