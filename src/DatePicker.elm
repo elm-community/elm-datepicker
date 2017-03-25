@@ -27,7 +27,7 @@ import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
 import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value)
-import Html.Events exposing (onBlur, onClick, onInput, onFocus, onWithOptions)
+import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions)
 import Json.Decode as Json
 import Task
 
@@ -40,6 +40,7 @@ type Msg
     | PrevMonth
     | Pick Date
     | Text String
+    | Change
     | Focus
     | Blur
     | MouseDown
@@ -275,17 +276,7 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             )
 
         Text text ->
-            let
-                withText =
-                    { model | inputText = text }
-
-                ( withDate, newPickedDate ) =
-                    deriveDateFromText withText
-            in
-                ( DatePicker withDate
-                , Cmd.none
-                , newPickedDate
-                )
+            { model | inputText = text } ! []
 
         Focus ->
             { model
@@ -294,15 +285,24 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             }
                 ! []
 
+        Change ->
+            let
+                ( withDate, newPickedDate ) =
+                    deriveDateFromText model 
+            in
+                ( DatePicker
+                    { withDate
+                        | inputText =
+                            withDate.pickedDate
+                                |> Maybe.map settings.dateFormatter
+                                |> Maybe.withDefault ""
+                    }
+                , Cmd.none
+                , newPickedDate
+                )
+
         Blur ->
-            { model
-                | open = forceOpen
-                , inputText =
-                    model.pickedDate
-                        |> Maybe.map settings.dateFormatter
-                        |> Maybe.withDefault ""
-            }
-                ! []
+            { model | open = forceOpen } ! []
 
         MouseDown ->
             { model | forceOpen = True } ! []
@@ -333,6 +333,7 @@ view (DatePicker ({ open, pickedDate, settings } as model)) =
                 ([ Attrs.classList inputClasses
                  , Attrs.name (settings.inputName ?> "")
                  , type_ "text"
+                 , on "change" (Json.succeed Change)
                  , onInput Text
                  , onBlur Blur
                  , onClick Focus
