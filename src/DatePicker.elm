@@ -214,7 +214,9 @@ setFilter isDisabled (DatePicker model) =
         DatePicker { model | settings = newSettings }
 
 
-{-| Attempt to set pickedDate from the state of text
+{-| Attempt to set pickedDate from the state of text.
+    If the date fails to parse, the model will retain its existing date.
+    Returns the result of parsing input text as the second value.
 -}
 deriveDateFromText : Model -> ( Model, Maybe Date )
 deriveDateFromText ({ currentMonth, forceOpen, inputText, pickedDate, settings } as model) =
@@ -273,35 +275,34 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             )
 
         Text text ->
-            { model | inputText = text } ! []
+            let
+                withText =
+                    { model | inputText = text }
+
+                ( withDate, newPickedDate ) =
+                    deriveDateFromText withText
+            in
+                ( DatePicker withDate
+                , Cmd.none
+                , newPickedDate
+                )
 
         Focus ->
             { model
                 | open = True
                 , forceOpen = False
-                , inputText =
-                    pickedDate
-                        |> Maybe.map settings.dateFormatter
-                        |> Maybe.withDefault ""
             }
                 ! []
 
         Blur ->
-            let
-                ( withDate, newPickedDate ) =
-                    deriveDateFromText model
-            in
-                ( DatePicker
-                    { withDate
-                        | open = forceOpen
-                        , inputText =
-                            withDate.pickedDate
-                                |> Maybe.map settings.dateFormatter
-                                |> Maybe.withDefault ""
-                    }
-                , Cmd.none
-                , newPickedDate
-                )
+            { model
+                | open = forceOpen
+                , inputText =
+                    model.pickedDate
+                        |> Maybe.map settings.dateFormatter
+                        |> Maybe.withDefault ""
+            }
+                ! []
 
         MouseDown ->
             { model | forceOpen = True } ! []
