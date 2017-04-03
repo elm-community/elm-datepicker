@@ -1,6 +1,11 @@
 module DatePicker.Date
     exposing
-        ( initDate
+        ( YearRange
+        , yearRangeActive
+        , between
+        , off
+        , moreOrLess
+        , initDate
         , formatDate
         , formatDay
         , formatMonth
@@ -25,6 +30,34 @@ type alias Year =
 
 type alias Day =
     Int
+
+
+type YearRange
+    = Off
+    | MoreOrLess Int
+    | Between Year Year
+
+
+yearRangeActive : YearRange -> Bool
+yearRangeActive yearRange =
+    yearRange /= Off
+
+
+between : Year -> Year -> YearRange
+between start end =
+    if start > end then
+        Off
+    else
+        Between start end
+
+
+moreOrLess : Int -> YearRange
+moreOrLess range =
+    MoreOrLess range
+
+off: YearRange
+off =
+    Off
 
 
 initDate : Date
@@ -558,6 +591,14 @@ newYear currentMonth newYear =
             Debug.crash ("Unknown Month " ++ (toString currentMonth))
 
 
-yearRange : Date -> Int -> List Int
+yearRange : Date -> YearRange -> List Int
 yearRange currentMonth range =
-    List.range ((year currentMonth) - range) ((year currentMonth) + range)
+    case range of
+        MoreOrLess num ->
+            List.range ((year currentMonth) - num) ((year currentMonth) + num)
+
+        Between start end ->
+            List.range start end
+
+        Off ->
+            Debug.crash ("Displaying year menu while it's Off")

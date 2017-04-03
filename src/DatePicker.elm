@@ -66,7 +66,7 @@ type alias Settings =
     , cellFormatter : String -> Html Msg
     , firstDayOfWeek : Day
     , pickedDate : Maybe Date
-    , changeYear : Bool
+    , changeYear : YearRange
     }
 
 
@@ -122,7 +122,7 @@ defaultSettings =
     , cellFormatter = formatCell
     , firstDayOfWeek = Sun
     , pickedDate = Nothing
-    , changeYear = False
+    , changeYear = off
     }
 
 
@@ -436,7 +436,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
             )
 
         dropdownYear =
-            Html.Keyed.node "select" [ onChange ChangeYear, class "year-list" ] (List.map durationOption (yearRange currentMonth 10))
+            Html.Keyed.node "select" [ onChange ChangeYear, class "year-list" ] (List.map durationOption (yearRange currentMonth settings.changeYear))
     in
         div
             [ class "picker"
@@ -450,7 +450,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                     [ span [ class "month" ]
                         [ text <| settings.monthFormatter <| month currentMonth ]
                     , span [ class "year" ]
-                        [ if not settings.changeYear then
+                        [ if not (yearRangeActive settings.changeYear) then
                             text <| settings.yearFormatter <| year currentMonth
                           else
                             dropdownYear
