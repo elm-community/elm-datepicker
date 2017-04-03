@@ -12,6 +12,8 @@ module DatePicker.Date
         , firstOfMonth
         , prevMonth
         , nextMonth
+        , newYear
+        , yearRange
         )
 
 import Date exposing (Date, Day(..), Month(..), year, month, day)
@@ -544,3 +546,18 @@ unsafeDate date =
 
         Ok date ->
             date
+
+
+newYear : Date -> String -> Date
+newYear currentMonth newYear =
+    case String.toInt newYear of
+        Ok year ->
+            mkDate year (month currentMonth) 1
+
+        Err _ ->
+            Debug.crash ("Unknown Month " ++ (toString currentMonth))
+
+
+yearRange : Date -> Int -> List Int
+yearRange currentMonth range =
+    List.range ((year currentMonth) - range) ((year currentMonth) + range)

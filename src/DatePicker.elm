@@ -26,8 +26,9 @@ module DatePicker
 import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
-import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value)
+import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, selected)
 import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions)
+import Html.Keyed
 import Json.Decode as Json
 import Task
 
@@ -39,6 +40,7 @@ type Msg
     | NextMonth
     | PrevMonth
     | Pick Date
+    | ChangeYear String
     | Text String
     | Change
     | Focus
@@ -64,6 +66,7 @@ type alias Settings =
     , cellFormatter : String -> Html Msg
     , firstDayOfWeek : Day
     , pickedDate : Maybe Date
+    , changeYear : Bool
     }
 
 
@@ -119,6 +122,7 @@ defaultSettings =
     , cellFormatter = formatCell
     , firstDayOfWeek = Sun
     , pickedDate = Nothing
+    , changeYear = False
     }
 
 
@@ -250,6 +254,9 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             , Cmd.none
             , Just date
             )
+
+        ChangeYear year ->
+            prepareDates (newYear model.currentMonth year) model ! []
 
         Text text ->
             { model | inputText = text } ! []
@@ -412,9 +419,24 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
         onPicker ev =
             Json.succeed
                 >> onWithOptions ev
-                    { preventDefault = True
+                    { preventDefault = False
                     , stopPropagation = True
                     }
+
+        onChange handler =
+            on "change" <| Json.map handler <| Json.at [ "target", "value" ] Json.string
+
+        isCurrentYear selectedYear =
+            year currentMonth == selectedYear
+
+        durationOption selectedYear =
+            ( toString selectedYear
+            , option [ value (toString selectedYear), selected (isCurrentYear selectedYear) ]
+                [ text (toString <| selectedYear) ]
+            )
+
+        dropdownYear =
+            Html.Keyed.node "select" [ onChange ChangeYear, class "year-list" ] (List.map durationOption (yearRange currentMonth 10))
     in
         div
             [ class "picker"
@@ -428,7 +450,11 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                     [ span [ class "month" ]
                         [ text <| settings.monthFormatter <| month currentMonth ]
                     , span [ class "year" ]
-                        [ text <| settings.yearFormatter <| year currentMonth ]
+                        [ if not settings.changeYear then
+                            text <| settings.yearFormatter <| year currentMonth
+                          else
+                            dropdownYear
+                        ]
                     ]
                 , div [ class "next-container" ]
                     [ arrow "next" NextMonth ]
