@@ -279,7 +279,12 @@ update : Msg -> DatePicker -> ( DatePicker, Cmd Msg, Maybe Date )
 update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as model)) =
     case msg of
         CurrentDate date ->
-            prepareDates (pickedDate ?> date) { model | today = date } ! []
+            case settings.changeYear of
+                Between from to ->
+                    prepareDates (pickedDate ?> newYear date (toString to)) { model | today = newYear date (toString to) } ! []
+
+                _ ->
+                    prepareDates (pickedDate ?> date) { model | today = date } ! []
 
         NextMonth ->
             prepareDates (nextMonth currentMonth) model ! []
