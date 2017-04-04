@@ -1,10 +1,6 @@
 module DatePicker.Date
     exposing
-        ( YearRange
-        , yearRangeActive
-        , between
-        , off
-        , moreOrLess
+        ( YearRange (..)
         , initDate
         , formatDate
         , formatDay
@@ -36,28 +32,6 @@ type YearRange
     = Off
     | MoreOrLess Int
     | Between Year Year
-
-
-yearRangeActive : YearRange -> Bool
-yearRangeActive yearRange =
-    yearRange /= Off
-
-
-between : Year -> Year -> YearRange
-between start end =
-    if start > end then
-        Off
-    else
-        Between start end
-
-
-moreOrLess : Int -> YearRange
-moreOrLess range =
-    MoreOrLess range
-
-off: YearRange
-off =
-    Off
 
 
 initDate : Date

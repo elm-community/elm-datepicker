@@ -11,6 +11,9 @@ module DatePicker
         , setDate
         , setFilter
         , isOpen
+        , between
+        , moreOrLess
+        , off
         )
 
 {-| A customizable date picker component.
@@ -20,7 +23,7 @@ module DatePicker
 @docs init, update, view, getDate, setDate, setFilter, isOpen
 
 # Settings
-@docs Settings, defaultSettings
+@docs Settings, defaultSettings, between, moreOrLess, off
 -}
 
 import Date exposing (Date, Day(..), Month, day, month, year)
@@ -124,6 +127,47 @@ defaultSettings =
     , pickedDate = Nothing
     , changeYear = off
     }
+
+
+yearRangeActive : YearRange -> Bool
+yearRangeActive yearRange =
+    yearRange /= Off
+
+
+{-| Select a range of date to display
+
+
+    DatePicker.init { defaultSettings | changeYear = between 1555 2018 }
+
+-}
+between : Int -> Int -> YearRange
+between start end =
+    if start > end then
+        Between end start
+    else
+        Between start end
+
+
+{-| Select a symmetric range of date to display
+
+
+    DatePicker.init { defaultSettings | changeYear = moreOrLess 10 }
+
+-}
+moreOrLess : Int -> YearRange
+moreOrLess range =
+    MoreOrLess range
+
+
+{-| Turn off the date range
+
+
+    DatePicker.init { defaultSettings | changeYear = off }
+
+-}
+off : YearRange
+off =
+    Off
 
 
 formatCell : String -> Html Msg
