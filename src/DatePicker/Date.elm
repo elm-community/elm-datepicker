@@ -601,4 +601,4 @@ yearRange currentMonth range =
             List.range start end
 
         Off ->
-            Debug.crash ("Displaying year menu while it's Off")
+            []

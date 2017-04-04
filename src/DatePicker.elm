@@ -27,7 +27,7 @@ import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
 import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, selected)
-import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions)
+import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions, targetValue)
 import Html.Keyed
 import Json.Decode as Json
 import Task
@@ -424,19 +424,19 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                     }
 
         onChange handler =
-            on "change" <| Json.map handler <| Json.at [ "target", "value" ] Json.string
+            on "change" <| Json.map handler targetValue
 
         isCurrentYear selectedYear =
             year currentMonth == selectedYear
 
-        durationOption selectedYear =
-            ( toString selectedYear
+        yearOption index selectedYear =
+            ( toString index
             , option [ value (toString selectedYear), selected (isCurrentYear selectedYear) ]
                 [ text (toString <| selectedYear) ]
             )
 
         dropdownYear =
-            Html.Keyed.node "select" [ onChange ChangeYear, class "year-list" ] (List.map durationOption (yearRange currentMonth settings.changeYear))
+            Html.Keyed.node "select" [ onChange ChangeYear, class "year-menu" ] (List.indexedMap yearOption (yearRange currentMonth settings.changeYear))
     in
         div
             [ class "picker"
@@ -453,7 +453,7 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                         [ if not (yearRangeActive settings.changeYear) then
                             text <| settings.yearFormatter <| year currentMonth
                           else
-                            dropdownYear
+                            Html.Keyed.node "span" [] [ ( toString (year currentMonth), dropdownYear ) ]
                         ]
                     ]
                 , div [ class "next-container" ]
