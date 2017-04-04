@@ -14,6 +14,8 @@ module DatePicker
         , between
         , moreOrLess
         , off
+        , from
+        , to
         )
 
 {-| A customizable date picker component.
@@ -23,7 +25,7 @@ module DatePicker
 @docs init, update, view, getDate, setDate, setFilter, isOpen
 
 # Settings
-@docs Settings, defaultSettings, between, moreOrLess, off
+@docs Settings, defaultSettings, between, moreOrLess, from, to, off
 -}
 
 import Date exposing (Date, Day(..), Month, day, month, year)
@@ -159,6 +161,28 @@ moreOrLess range =
     MoreOrLess range
 
 
+{-| Select a range from a given year to this year
+
+
+    DatePicker.init { defaultSettings | changeYear = from 1995 }
+
+-}
+from : Int -> YearRange
+from year =
+    From year
+
+
+{-| Select a range from this year to a given year
+
+
+    DatePicker.init { defaultSettings | changeYear = to 2020 }
+
+-}
+to : Int -> YearRange
+to year =
+    To year
+
+
 {-| Turn off the date range
 
 
@@ -276,16 +300,24 @@ picked or if the previously-picked date has not changed and `Just`
 some date if it has.
 -}
 update : Msg -> DatePicker -> ( DatePicker, Cmd Msg, Maybe Date )
-update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as model)) =
+update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings, today } as model)) =
     case msg of
         CurrentDate date ->
-            case settings.changeYear of
-                Between from to ->
-                    prepareDates (pickedDate ?> newYear date (toString to)) { model | today = newYear date (toString to) } ! []
+            let currentDate =
 
-                _ ->
-                    prepareDates (pickedDate ?> date) { model | today = date } ! []
+              case settings.changeYear of
+                  Between from to ->
+                      if to < year date then
+                          newYear date (toString to)
+                      else if from > year date then
+                          newYear date (toString from)
+                      else
+                          date
 
+                  _ ->
+                      date
+            in
+                prepareDates (pickedDate ?> currentDate) { model | today = currentDate } ! []
         NextMonth ->
             prepareDates (nextMonth currentMonth) model ! []
 
@@ -481,11 +513,11 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
         yearOption index selectedYear =
             ( toString index
             , option [ value (toString selectedYear), selected (isCurrentYear selectedYear) ]
-                [ text (toString <| selectedYear) ]
+                [ text <| toString selectedYear ]
             )
 
         dropdownYear =
-            Html.Keyed.node "select" [ onChange ChangeYear, class "year-menu" ] (List.indexedMap yearOption (yearRange currentMonth settings.changeYear))
+            Html.Keyed.node "select" [ onChange ChangeYear, class "year-menu" ] (List.indexedMap yearOption (yearRange { today = today, currentMonth = currentMonth } settings.changeYear))
     in
         div
             [ class "picker"

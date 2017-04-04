@@ -1,6 +1,6 @@
 module DatePicker.Date
     exposing
-        ( YearRange (..)
+        ( YearRange(..)
         , initDate
         , formatDate
         , formatDay
@@ -32,6 +32,8 @@ type YearRange
     = Off
     | MoreOrLess Int
     | Between Year Year
+    | From Year
+    | To Year
 
 
 initDate : Date
@@ -559,20 +561,26 @@ newYear : Date -> String -> Date
 newYear currentMonth newYear =
     case String.toInt newYear of
         Ok year ->
-            mkDate year (month currentMonth) 1
+            mkDate year (month currentMonth) (day currentMonth)
 
         Err _ ->
             Debug.crash ("Unknown Month " ++ (toString currentMonth))
 
 
-yearRange : Date -> YearRange -> List Int
-yearRange currentMonth range =
+yearRange : { today : Date, currentMonth : Date } -> YearRange -> List Int
+yearRange { today, currentMonth } range =
     case range of
         MoreOrLess num ->
             List.range ((year currentMonth) - num) ((year currentMonth) + num)
 
         Between start end ->
             List.range start end
+
+        From year_ ->
+            List.range year_ (year today)
+
+        To year_ ->
+            List.range (year today) year_
 
         Off ->
             []
