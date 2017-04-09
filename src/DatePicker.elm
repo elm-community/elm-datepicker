@@ -11,6 +11,11 @@ module DatePicker
         , setDate
         , setFilter
         , isOpen
+        , between
+        , moreOrLess
+        , off
+        , from
+        , to
         )
 
 {-| A customizable date picker component.
@@ -20,14 +25,15 @@ module DatePicker
 @docs init, update, view, getDate, setDate, setFilter, isOpen
 
 # Settings
-@docs Settings, defaultSettings
+@docs Settings, defaultSettings, between, moreOrLess, from, to, off
 -}
 
 import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
-import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value)
-import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions)
+import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, selected)
+import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions, targetValue)
+import Html.Keyed
 import Json.Decode as Json
 import Task
 
@@ -39,6 +45,7 @@ type Msg
     | NextMonth
     | PrevMonth
     | Pick Date
+    | ChangeYear String
     | Text String
     | Change
     | Focus
@@ -64,6 +71,7 @@ type alias Settings =
     , cellFormatter : String -> Html Msg
     , firstDayOfWeek : Day
     , pickedDate : Maybe Date
+    , changeYear : YearRange
     }
 
 
@@ -119,7 +127,71 @@ defaultSettings =
     , cellFormatter = formatCell
     , firstDayOfWeek = Sun
     , pickedDate = Nothing
+    , changeYear = off
     }
+
+
+yearRangeActive : YearRange -> Bool
+yearRangeActive yearRange =
+    yearRange /= Off
+
+
+{-| Select a range of date to display
+
+
+    DatePicker.init { defaultSettings | changeYear = between 1555 2018 }
+
+-}
+between : Int -> Int -> YearRange
+between start end =
+    if start > end then
+        Between end start
+    else
+        Between start end
+
+
+{-| Select a symmetric range of date to display
+
+
+    DatePicker.init { defaultSettings | changeYear = moreOrLess 10 }
+
+-}
+moreOrLess : Int -> YearRange
+moreOrLess range =
+    MoreOrLess range
+
+
+{-| Select a range from a given year to this year
+
+
+    DatePicker.init { defaultSettings | changeYear = from 1995 }
+
+-}
+from : Int -> YearRange
+from year =
+    From year
+
+
+{-| Select a range from this year to a given year
+
+
+    DatePicker.init { defaultSettings | changeYear = to 2020 }
+
+-}
+to : Int -> YearRange
+to year =
+    To year
+
+
+{-| Turn off the date range
+
+
+    DatePicker.init { defaultSettings | changeYear = off }
+
+-}
+off : YearRange
+off =
+    Off
 
 
 formatCell : String -> Html Msg
@@ -228,11 +300,24 @@ picked or if the previously-picked date has not changed and `Just`
 some date if it has.
 -}
 update : Msg -> DatePicker -> ( DatePicker, Cmd Msg, Maybe Date )
-update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as model)) =
+update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings, today } as model)) =
     case msg of
         CurrentDate date ->
-            prepareDates (pickedDate ?> date) { model | today = date } ! []
+            let currentDate =
 
+              case settings.changeYear of
+                  Between from to ->
+                      if to < year date then
+                          newYear date (toString to)
+                      else if from > year date then
+                          newYear date (toString from)
+                      else
+                          date
+
+                  _ ->
+                      date
+            in
+                prepareDates (pickedDate ?> currentDate) { model | today = currentDate } ! []
         NextMonth ->
             prepareDates (nextMonth currentMonth) model ! []
 
@@ -250,6 +335,9 @@ update msg (DatePicker ({ forceOpen, currentMonth, pickedDate, settings } as mod
             , Cmd.none
             , Just date
             )
+
+        ChangeYear year ->
+            prepareDates (newYear model.currentMonth year) model ! []
 
         Text text ->
             { model | inputText = text } ! []
@@ -412,9 +500,24 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
         onPicker ev =
             Json.succeed
                 >> onWithOptions ev
-                    { preventDefault = True
+                    { preventDefault = False
                     , stopPropagation = True
                     }
+
+        onChange handler =
+            on "change" <| Json.map handler targetValue
+
+        isCurrentYear selectedYear =
+            year currentMonth == selectedYear
+
+        yearOption index selectedYear =
+            ( toString index
+            , option [ value (toString selectedYear), selected (isCurrentYear selectedYear) ]
+                [ text <| toString selectedYear ]
+            )
+
+        dropdownYear =
+            Html.Keyed.node "select" [ onChange ChangeYear, class "year-menu" ] (List.indexedMap yearOption (yearRange { today = today, currentMonth = currentMonth } settings.changeYear))
     in
         div
             [ class "picker"
@@ -428,7 +531,11 @@ datePicker { today, currentMonth, currentDates, pickedDate, settings } =
                     [ span [ class "month" ]
                         [ text <| settings.monthFormatter <| month currentMonth ]
                     , span [ class "year" ]
-                        [ text <| settings.yearFormatter <| year currentMonth ]
+                        [ if not (yearRangeActive settings.changeYear) then
+                            text <| settings.yearFormatter <| year currentMonth
+                          else
+                            Html.Keyed.node "span" [] [ ( toString (year currentMonth), dropdownYear ) ]
+                        ]
                     ]
                 , div [ class "next-container" ]
                     [ arrow "next" NextMonth ]
