@@ -8,7 +8,6 @@ module DatePicker
         , update
         , view
         , getDate
-        , setDate
         , setFilter
         , isOpen
         )
@@ -45,6 +44,27 @@ type Msg
     | Blur
     | MouseDown
     | MouseUp
+
+
+{-|
+Exposed wrapper for the Pick Msg option. This allows us to pick a specific date
+via a call to the update function rather than using the deprecated setDate.
+
+Previously:
+
+    updatedPicker =
+        DatePicker.setDate date datePicker
+
+ Now:
+
+    (updatedPicker, _, _) =
+        DatePicker.update (DatePicker.pick date) datePicker
+
+This keeps all update logic within the update function as it should be
+-}
+pick : Date -> Msg
+pick =
+    Pick
 
 
 {-| The type of date picker settings.
@@ -184,19 +204,6 @@ Extract the current set date (if set) from a datepicker
 getDate : DatePicker -> Maybe Date
 getDate (DatePicker model) =
     model.pickedDate
-
-
-{-|
-Set a new date in the datepicker
--}
-setDate : Date -> DatePicker -> DatePicker
-setDate date (DatePicker model) =
-    prepareDates date
-        { model
-            | pickedDate = Just date
-            , inputText = model.settings.dateFormatter date
-        }
-        |> DatePicker
 
 
 {-|
