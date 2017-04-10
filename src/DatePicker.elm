@@ -10,6 +10,7 @@ module DatePicker
         , getDate
         , setFilter
         , isOpen
+        , pick
         )
 
 {-| A customizable date picker component.
