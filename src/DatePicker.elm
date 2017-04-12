@@ -22,7 +22,7 @@ module DatePicker
 
 # Tea ☕
 @docs Msg, DatePicker
-@docs init, update, view, getDate, setDate, setFilter, isOpen
+@docs init, update, view, getDate, pick, setFilter, isOpen
 
 # Settings
 @docs Settings, defaultSettings, between, moreOrLess, from, to, off
