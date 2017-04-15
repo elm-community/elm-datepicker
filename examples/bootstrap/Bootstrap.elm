@@ -1,7 +1,7 @@
 module Bootstrap exposing (main)
 
 import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
-import DatePicker exposing (defaultSettings)
+import DatePicker exposing (defaultSettings, DateEvent(..))
 import Html exposing (Html, div, form, h1, input, label, text)
 import Html.Attributes exposing (class, type_, value)
 
@@ -16,21 +16,26 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+settings : DatePicker.Settings
+settings =
     let
         isDisabled date =
             dayOfWeek date
                 |> flip List.member [ Sat, Sun ]
+    in
+        { defaultSettings
+            | isDisabled = isDisabled
+            , inputClassList = [ ( "form-control", True ) ]
+            , inputName = Just "date"
+            , inputId = Just "date-field"
+        }
 
+
+init : ( Model, Cmd Msg )
+init =
+    let
         ( datePicker, datePickerFx ) =
             DatePicker.init
-                { defaultSettings
-                    | isDisabled = isDisabled
-                    , inputClassList = [ ( "form-control", True ) ]
-                    , inputName = Just "date"
-                    , inputId = Just "date-field"
-                }
     in
         { date = Nothing
         , datePicker = datePicker
@@ -43,19 +48,17 @@ update msg ({ datePicker } as model) =
     case msg of
         ToDatePicker msg ->
             let
-                ( newDatePicker, datePickerFx, mDate ) =
-                    DatePicker.update msg datePicker
-
-                date =
-                    case mDate of
-                        Nothing ->
-                            model.date
-
-                        date ->
-                            date
+                ( newDatePicker, datePickerFx, event ) =
+                    DatePicker.update settings msg datePicker
             in
                 { model
-                    | date = date
+                    | date =
+                        case event of
+                            Changed date ->
+                                date
+
+                            NoChange ->
+                                model.date
                     , datePicker = newDatePicker
                 }
                     ! [ Cmd.map ToDatePicker datePickerFx ]
@@ -67,7 +70,7 @@ view ({ date, datePicker } as model) =
         [ form []
             [ div [ class "form-group" ]
                 [ label [] [ text "Pick a date" ]
-                , DatePicker.view datePicker
+                , DatePicker.view date settings datePicker
                     |> Html.map ToDatePicker
                 ]
             , input

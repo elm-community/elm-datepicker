@@ -1,7 +1,7 @@
 module Simple exposing (main)
 
 import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
-import DatePicker exposing (defaultSettings)
+import DatePicker exposing (defaultSettings, DateEvent(..))
 import Html exposing (Html, div, h1, text)
 
 
@@ -15,15 +15,21 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
+settings : DatePicker.Settings
+settings =
     let
         isDisabled date =
             dayOfWeek date
                 |> flip List.member [ Sat, Sun ]
+    in
+        { defaultSettings | isDisabled = isDisabled }
 
+
+init : ( Model, Cmd Msg )
+init =
+    let
         ( datePicker, datePickerFx ) =
-            DatePicker.init { defaultSettings | isDisabled = isDisabled }
+            DatePicker.init
     in
         { date = Nothing
         , datePicker = datePicker
@@ -32,23 +38,23 @@ init =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg ({ datePicker } as model) =
+update msg ({ date, datePicker } as model) =
     case msg of
         ToDatePicker msg ->
             let
-                ( newDatePicker, datePickerFx, mDate ) =
-                    DatePicker.update msg datePicker
+                ( newDatePicker, datePickerFx, dateEvent ) =
+                    DatePicker.update settings msg datePicker
 
-                date =
-                    case mDate of
-                        Nothing ->
-                            model.date
+                newDate =
+                    case dateEvent of
+                        Changed newDate ->
+                            newDate
 
-                        date ->
+                        _ ->
                             date
             in
                 { model
-                    | date = date
+                    | date = newDate
                     , datePicker = newDatePicker
                 }
                     ! [ Cmd.map ToDatePicker datePickerFx ]
@@ -63,7 +69,7 @@ view ({ date, datePicker } as model) =
 
             Just date ->
                 h1 [] [ text <| formatDate date ]
-        , DatePicker.view datePicker
+        , DatePicker.view date settings datePicker
             |> Html.map ToDatePicker
         ]
 

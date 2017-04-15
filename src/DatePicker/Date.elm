@@ -567,8 +567,8 @@ newYear currentMonth newYear =
             Debug.crash ("Unknown Month " ++ (toString currentMonth))
 
 
-yearRange : { today : Date, currentMonth : Date } -> YearRange -> List Int
-yearRange { today, currentMonth } range =
+yearRange : { focused : Date, currentMonth : Date } -> YearRange -> List Int
+yearRange { focused, currentMonth } range =
     case range of
         MoreOrLess num ->
             List.range ((year currentMonth) - num) ((year currentMonth) + num)
@@ -577,10 +577,10 @@ yearRange { today, currentMonth } range =
             List.range start end
 
         From year_ ->
-            List.range year_ (year today)
+            List.range year_ (year focused)
 
         To year_ ->
-            List.range (year today) year_
+            List.range (year focused) year_
 
         Off ->
             []
