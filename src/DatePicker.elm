@@ -267,6 +267,7 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
                 { model
                     | open = False
                     , inputText = Nothing
+                    , focused = Nothing
                 }
             , Cmd.none
             , Changed date
