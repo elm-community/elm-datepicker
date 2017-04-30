@@ -85,7 +85,7 @@ type alias Model =
     }
 
 
-{-| The DatePicker model.
+{-| The DatePicker model. Opaque, hence no field docs.
 -}
 type DatePicker
     = DatePicker Model
@@ -243,7 +243,8 @@ isOpen (DatePicker model) =
     model.open
 
 
-{-| Pass requests for new dates up from updates
+{-| A sugaring of `Maybe` to explicitly tell you how to interpret `Changed Nothing`, because `Just Nothing` seems somehow wrong.
+    Used to represent a request, by the datepicker, to change the selected date.
 -}
 type DateEvent
     = NoChange
@@ -336,7 +337,7 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
             { model | forceOpen = False } ! []
 
 
-{-| The date picker view.
+{-| The date picker view. The Date passed is whatever date it should treat as selected.
 -}
 view : Maybe Date -> Settings -> DatePicker -> Html Msg
 view pickedDate settings (DatePicker ({ open } as model)) =

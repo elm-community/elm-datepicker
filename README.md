@@ -9,21 +9,31 @@ A reusable date picker component in Elm.
 
 ## Usage
 
-The `DatePicker.init` method initialises the DatePicker. It takes a single `settings` argument.
-The `DatePicker.defaultSettings` is provided to make it easier to use. You only have to override the
+The `DatePicker.init` function initialises the DatePicker. It takes a single `settings` argument. `DatePicker.defaultSettings` is provided to make it easier to use. You only have to override the
 settings that you are interested in.
 
-The `DatePicker.init` method returns the initialised DatePicker and associated `Cmds` so it must
-be done in your program's `init` or `update` methods:
+The `DatePicker.init` function returns the initialised DatePicker and associated `Cmds` so it must be done in your program's `init` or `update` functions:
+
+**Note** Make sure you don't throw away the initial `Cmd`!
 
 ```elm
+someSettings : DatePicker.Settings
+someSettings = 
+    { defaultSettings
+        | inputClassList = [ ( "form-control", True ) ]
+        , inputId = Just "datepicker"
+    }
+    
+...
+-- init ...
+    let
         ( datePicker, datePickerCmd ) =
-            DatePicker.init
-                { defaultSettings
-                    | inputClassList = [ ( "form-control", True ) ]
-                    , inputId = Just "datepicker"
-                }
-
+            DatePicker.init someSettings
+    in
+        (
+            { model | datePicker = datePicker },
+            Cmd.map SetDatePicker datePickerCmd
+        )
 ```
 
 The `DatePicker` can be displayed in a view using the `DatePicker.view` function. It returns its own
@@ -41,33 +51,40 @@ view : Model -> Html Msg
 view model =
     ...
     div [] [
-        DatePicker.view model.startDatePicker |> Html.map SetDatePicker
+        DatePicker.view
+            model.date 
+            someSettings
+            model.startDatePicker 
+         |> Html.map SetDatePicker
         ]
 
 ```
 
-In order handle `Msg` in your update function, you should unwrap the `DatePicker.Msg` and pass it
-down to the `DatePicker.update` function. The `DatePicker.update` function returns the new date as
-third value in the return tuple if the date as changed. As it might not have changed it is returned
-as a `Maybe Date` where `Nothing` indicates no change.
+To handle `Msg` in your update function, you should unwrap the `DatePicker.Msg` and pass it down to the `DatePicker.update` function. The `DatePicker.update` function returns:
+
+* the new model
+* any command 
+* the new date as a `DateEvent (Maybe Date)`, where `DateEvent` is really just `Maybe` with different semantics, to avoid a potentially confusing `Maybe Maybe`.
+
+**Note** The datepicker does _not_ retain an internal idea of a picked date in its model. That is, it depends completely on you for an idea of what date is chosen, so that third tuple member is important! Evan Czaplicki has a compelling argument for why components should not necessarily have an their own state for the primary data they manage [here](https://github.com/evancz/elm-sortable-table#single-source-of-truth).
 
 ```elm
-update : Msg -> Model -> ( Model, Cmd, Msg )
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         ...
 
          SetDatePicker msg ->
             let
-                ( newDatePicker, datePickerCmd, maybeNewDate ) =
+                ( newDatePicker, datePickerCmd, dateEvent ) =
                     DatePicker.update msg model.startDatePicker
 
                 date =
-                    case maybeNewDate of
-                        Nothing ->
+                    case dateEvent of
+                        NoChange ->
                             model.date
 
-                        Just newDate ->
+                        Changed newDate ->
                             newDate |> processDate
             in
                 { model
@@ -77,39 +94,6 @@ update msg model =
                     ! [ Cmd.map SetDatePicker datePickerCmd ]
 
 ```
-
-If you have a `DatePicker` and you would like to change the date before displaying it, you can use
-the `DatePicker.init` function to replace it with a new `DatePicker` with the new date in your
-`update` function:
-
-```elm
-
-update msg model =
-    case msg of
-        ...
-
-        NewForm date ->
-            let
-                ( datePicker, datePickerCmd ) =
-                    let
-                        settings =
-                            { defaultSettings
-                                | pickedDate = Just date
-                                , inputClassList = [ ( "form-control", True ) ]
-                                , inputId = Just "datepicker"
-                            }
-                    in
-                        DatePicker.init settings
-
-             in
-                { model
-                    | datePicker = datePicker
-                }
-                    ! [ Cmd.map SetDatePicker datePickerCmd
-                      ]
-```
-
-
 
 ## Examples
 
