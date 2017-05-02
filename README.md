@@ -9,26 +9,17 @@ A reusable date picker component in Elm.
 
 ## Usage
 
-The `DatePicker.init` function initialises the DatePicker. It takes a single `settings` argument. `DatePicker.defaultSettings` is provided to make it easier to use. You only have to override the
-settings that you are interested in.
-
-The `DatePicker.init` function returns the initialised DatePicker and associated `Cmds` so it must be done in your program's `init` or `update` functions:
+The `DatePicker.init` function initialises the DatePicker. It returns the initialised DatePicker and associated `Cmds` so it must be done in your program's `init` or `update` functions:
 
 **Note** Make sure you don't throw away the initial `Cmd`!
 
 ```elm
-someSettings : DatePicker.Settings
-someSettings = 
-    { defaultSettings
-        | inputClassList = [ ( "form-control", True ) ]
-        , inputId = Just "datepicker"
-    }
-    
+   
+init : (Model, Cmd Msg)
 ...
--- init ...
     let
         ( datePicker, datePickerCmd ) =
-            DatePicker.init someSettings
+            DatePicker.init 
     in
         (
             { model | datePicker = datePicker },
@@ -66,9 +57,18 @@ To handle `Msg` in your update function, you should unwrap the `DatePicker.Msg` 
 * any command 
 * the new date as a `DateEvent (Maybe Date)`, where `DateEvent` is really just `Maybe` with different semantics, to avoid a potentially confusing `Maybe Maybe`.
 
+To create the settings to pass to `update`, DatePicker.defaultSettings` is provided to make it easier to use. You only have to override the settings that you are interested in.
+
 **Note** The datepicker does _not_ retain an internal idea of a picked date in its model. That is, it depends completely on you for an idea of what date is chosen, so that third tuple member is important! Evan Czaplicki has a compelling argument for why components should not necessarily have an their own state for the primary data they manage [here](https://github.com/evancz/elm-sortable-table#single-source-of-truth).
 
 ```elm
+someSettings : DatePicker.Settings
+someSettings = 
+    { defaultSettings
+        | inputClassList = [ ( "form-control", True ) ]
+        , inputId = Just "datepicker"
+    }
+
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
@@ -77,7 +77,7 @@ update msg model =
          SetDatePicker msg ->
             let
                 ( newDatePicker, datePickerCmd, dateEvent ) =
-                    DatePicker.update msg model.startDatePicker
+                    DatePicker.update someSettings msg model.startDatePicker
 
                 date =
                     case dateEvent of
