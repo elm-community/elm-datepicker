@@ -67,6 +67,7 @@ type alias Settings =
     , cellFormatter : String -> Html Msg
     , firstDayOfWeek : Day
     , changeYear : YearRange
+    , required : Bool
     }
 
 
@@ -125,6 +126,7 @@ defaultSettings =
     , cellFormatter = formatCell
     , firstDayOfWeek = Sun
     , changeYear = off
+    , required = False
     }
 
 
@@ -364,6 +366,7 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                  , onBlur Blur
                  , onClick Focus
                  , onFocus Focus
+                 , Attrs.required settings.required
                  ]
                     ++ potentialInputId
                     ++ xs
