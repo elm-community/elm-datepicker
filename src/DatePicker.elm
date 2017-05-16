@@ -8,6 +8,7 @@ module DatePicker
         , init
         , update
         , view
+        , pick
         , isOpen
         , between
         , moreOrLess
@@ -23,7 +24,7 @@ module DatePicker
 @docs init, update, view, isOpen
 
 # Settings
-@docs Settings, defaultSettings, between, moreOrLess, from, to, off
+@docs Settings, defaultSettings, pick, between, moreOrLess, from, to, off
 -}
 
 import Date exposing (Date, Day(..), Month, day, month, year)
@@ -338,6 +339,16 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
         MouseUp ->
             { model | forceOpen = False } ! []
 
+{-| Generate a message that will act as if the user has chosen a certain date,
+    so you can call `update` on the model yourself.
+    Note that this is different from just changing the "current chosen" date,
+    since the picker doesn't actually have internal state for that.
+    Rather, it will change the calendar focus and replace the input text with the new value.
+
+    update datepickerSettings (pick (Just someDate)) datepicker
+-}
+pick : Maybe Date -> Msg
+pick = Pick
 
 {-| The date picker view. The Date passed is whatever date it should treat as selected.
 -}
