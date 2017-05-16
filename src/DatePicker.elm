@@ -343,7 +343,10 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
     so you can call `update` on the model yourself.
     Note that this is different from just changing the "current chosen" date,
     since the picker doesn't actually have internal state for that.
-    Rather, it will change the calendar focus and replace the input text with the new value.
+    Rather, it will:
+        * change the calendar focus
+        * replace the input text with the new value
+        * close the picker
 
     update datepickerSettings (pick (Just someDate)) datepicker
 -}
