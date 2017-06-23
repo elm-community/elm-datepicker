@@ -15,13 +15,14 @@ module DatePicker
         , off
         , from
         , to
+        , focusedDate
         )
 
 {-| A customizable date picker component.
 
 # Tea ☕
 @docs Msg, DateEvent, DatePicker
-@docs init, update, view, isOpen
+@docs init, update, view, isOpen, focusedDate
 
 # Settings
 @docs Settings, defaultSettings, pick, between, moreOrLess, from, to, off
@@ -244,6 +245,13 @@ Expose if the datepicker is open
 isOpen : DatePicker -> Bool
 isOpen (DatePicker model) =
     model.open
+
+
+{-| Expose the currently focused date
+-}
+focusedDate : DatePicker -> Maybe Date
+focusedDate (DatePicker model) =
+    model.focused
 
 
 {-| A sugaring of `Maybe` to explicitly tell you how to interpret `Changed Nothing`, because `Just Nothing` seems somehow wrong.
