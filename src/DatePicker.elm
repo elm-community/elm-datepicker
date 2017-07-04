@@ -60,6 +60,7 @@ type alias Settings =
     , inputClassList : List ( String, Bool )
     , inputName : Maybe String
     , inputId : Maybe String
+    , inputAttributes : List (Html.Attribute Msg)
     , isDisabled : Date -> Bool
     , parser : String -> Result String Date
     , dateFormatter : Date -> String
@@ -69,7 +70,6 @@ type alias Settings =
     , cellFormatter : String -> Html Msg
     , firstDayOfWeek : Day
     , changeYear : YearRange
-    , required : Bool
     }
 
 
@@ -119,6 +119,9 @@ defaultSettings =
     , inputClassList = []
     , inputName = Nothing
     , inputId = Nothing
+    , inputAttributes =
+        [ Attrs.required False
+        ]
     , isDisabled = always False
     , parser = Date.fromString
     , dateFormatter = formatDate
@@ -128,7 +131,6 @@ defaultSettings =
     , cellFormatter = formatCell
     , firstDayOfWeek = Sun
     , changeYear = off
-    , required = False
     }
 
 
@@ -347,6 +349,7 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
         MouseUp ->
             { model | forceOpen = False } ! []
 
+
 {-| Generate a message that will act as if the user has chosen a certain date,
     so you can call `update` on the model yourself.
     Note that this is different from just changing the "current chosen" date,
@@ -359,7 +362,9 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
     update datepickerSettings (pick (Just someDate)) datepicker
 -}
 pick : Maybe Date -> Msg
-pick = Pick
+pick =
+    Pick
+
 
 {-| The date picker view. The Date passed is whatever date it should treat as selected.
 -}
@@ -388,8 +393,8 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                  , onBlur Blur
                  , onClick Focus
                  , onFocus Focus
-                 , Attrs.required settings.required
                  ]
+                    ++ settings.inputAttributes
                     ++ potentialInputId
                     ++ xs
                 )
