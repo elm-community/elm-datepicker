@@ -5,7 +5,9 @@ module DatePicker
         , DateEvent(..)
         , DatePicker
         , defaultSettings
+        , defaultState
         , init
+        , initWithState
         , update
         , view
         , pick
@@ -22,10 +24,10 @@ module DatePicker
 
 # Tea ☕
 @docs Msg, DateEvent, DatePicker
-@docs init, update, view, isOpen, focusedDate
+@docs init, initWithState, update, view, isOpen, focusedDate
 
 # Settings
-@docs Settings, defaultSettings, pick, between, moreOrLess, from, to, off
+@docs Settings, defaultState, defaultSettings, pick, between, moreOrLess, from, to, off
 -}
 
 import Date exposing (Date, Day(..), Month, day, month, year)
@@ -202,27 +204,45 @@ formatCell day =
     text day
 
 
-{-| Initialize a DatePicker given a Settings record.  You must execute
+{-| Default internal state for use with `initWithState`
+-}
+defaultState : Model
+defaultState =
+    { open = False
+    , forceOpen = False
+    , focused = Just initDate
+    , inputText = Nothing
+    , today = initDate
+    }
+
+
+{-| Initialize a DatePicker.  You must execute
 the returned command for the date picker to behave correctly.
 
 
     init =
       let
          (datePicker, datePickerFx) =
-           DatePicker.init defaultSettings
+           DatePicker.init
       in
          { picker = datePicker } ! [ Cmd.map ToDatePicker datePickerfx ]
 
 -}
 init : ( DatePicker, Cmd Msg )
 init =
+    ( DatePicker defaultState
+    , Task.perform CurrentDate Date.now
+    )
+
+
+{-| Initialize with raw state so you can control anything you like.
+    The returned command sets the picker to Date.now; you should execute it if
+    you haven't supplied `today` and `focused`.
+-}
+initWithState : Model -> ( DatePicker, Cmd Msg )
+initWithState init =
     ( DatePicker <|
-        { open = False
-        , forceOpen = False
-        , focused = Just initDate
-        , inputText = Nothing
-        , today = initDate
-        }
+        init
     , Task.perform CurrentDate Date.now
     )
 
