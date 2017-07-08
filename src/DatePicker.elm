@@ -90,6 +90,24 @@ type alias Model =
     }
 
 
+{-| Abstraction to allow user to submit initial state _that they know about_
+    without coupling precisely to the inner state of the picker.
+-}
+type alias ControlledModel =
+    { open : Bool
+    , forceOpen : Bool
+    , focused :
+        Maybe Date
+        -- date currently center-focused by picker, but not necessarily chosen
+    , inputText :
+        Maybe String
+        -- for user input that hasn't yet been submitted
+    , today :
+        Date
+        -- actual, current day as far as we know
+    }
+
+
 {-| The DatePicker model. Opaque, hence no field docs.
 -}
 type DatePicker
@@ -239,7 +257,7 @@ init =
     The returned command sets the picker to Date.now; you should execute it if
     you haven't supplied `today` and `focused`.
 -}
-initWithState : Model -> ( DatePicker, Cmd Msg )
+initWithState : ControlledModel -> ( DatePicker, Cmd Msg )
 initWithState init =
     ( DatePicker <|
         init
