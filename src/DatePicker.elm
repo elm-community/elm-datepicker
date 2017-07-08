@@ -254,8 +254,8 @@ init =
 
 
 {-| Initialize with raw state so you can control anything you like.
-    The returned command sets the picker to Date.now; you should execute it if
-    you haven't supplied `today` and `focused`.
+    The returned command sets the picker to Date.now, so you should execute it if
+    you want Date.now values for `focused` and `today`.
 -}
 initWithState : ControlledModel -> ( DatePicker, Cmd Msg )
 initWithState init =
