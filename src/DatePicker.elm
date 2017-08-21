@@ -6,6 +6,7 @@ module DatePicker
         , DatePicker
         , defaultSettings
         , init
+        , initFromDate
         , update
         , view
         , pick
@@ -22,7 +23,7 @@ module DatePicker
 
 # Tea ☕
 @docs Msg, DateEvent, DatePicker
-@docs init, update, view, isOpen, focusedDate
+@docs init, initFromDate, update, view, isOpen, focusedDate
 
 # Settings
 @docs Settings, defaultSettings, pick, between, moreOrLess, from, to, off
@@ -225,6 +226,24 @@ init =
         }
     , Task.perform CurrentDate Date.now
     )
+
+
+{-| Initialize a DatePicker with a given Date
+
+
+    init date =
+      { picker = DatePicker.initFromDate date } ! [ ]
+
+-}
+initFromDate : Date -> DatePicker
+initFromDate date =
+    DatePicker <|
+        { open = False
+        , forceOpen = False
+        , focused = Just date
+        , inputText = Nothing
+        , today = date
+        }
 
 
 prepareDates : Date -> Day -> { currentMonth : Date, currentDates : List Date }
