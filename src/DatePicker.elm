@@ -203,14 +203,14 @@ formatCell day =
     text day
 
 
-{-| Initialize a DatePicker given a Settings record.  You must execute
-the returned command for the date picker to behave correctly.
-
+{-| The default initial state of the Datepicker.  You must execute
+the returned command (which, for the curious, sets the current date)
+for the date picker to behave correctly.
 
     init =
       let
          (datePicker, datePickerFx) =
-           DatePicker.init defaultSettings
+           DatePicker.init
       in
          { picker = datePicker } ! [ Cmd.map ToDatePicker datePickerfx ]
 
