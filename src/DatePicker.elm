@@ -7,6 +7,7 @@ module DatePicker
         , defaultSettings
         , init
         , initFromDate
+        , initFromDates
         , update
         , view
         , pick
@@ -21,12 +22,17 @@ module DatePicker
 
 {-| A customizable date picker component.
 
+
 # Tea ☕
+
 @docs Msg, DateEvent, DatePicker
-@docs init, initFromDate, update, view, isOpen, focusedDate
+@docs init, initFromDate, initFromDates, update, view, isOpen, focusedDate
+
 
 # Settings
+
 @docs Settings, defaultSettings, pick, between, moreOrLess, from, to, off
+
 -}
 
 import Date exposing (Date, Day(..), Month, day, month, year)
@@ -230,7 +236,6 @@ init =
 
 {-| Initialize a DatePicker with a given Date
 
-
     init date =
       { picker = DatePicker.initFromDate date } ! [ ]
 
@@ -243,6 +248,23 @@ initFromDate date =
         , focused = Just date
         , inputText = Nothing
         , today = date
+        }
+
+
+{-| Initialize a DatePicker with a date for today and Maybe a date picked
+
+    init today date =
+      { picker = DatePicker.initFromDates today date } ! []
+
+-}
+initFromDates : Date -> Maybe Date -> DatePicker
+initFromDates today date =
+    DatePicker <|
+        { open = False
+        , forceOpen = False
+        , focused = date
+        , inputText = Nothing
+        , today = today
         }
 
 
