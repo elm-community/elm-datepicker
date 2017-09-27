@@ -452,12 +452,13 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                     |> defaultValue
                 ]
     in
-        div [ class "container" ]
-            [ dateInput
+        Html.Keyed.node "div"
+            [ class "container" ]
+            [ ( "dateInput", dateInput )
             , if open then
-                datePicker pickedDate settings model
+                ( "datePicker", datePicker pickedDate settings model )
               else
-                text ""
+                ( "text", text "" )
             ]
 
 
