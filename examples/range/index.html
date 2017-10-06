@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>elm-datepicker example</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://necolas.github.io/normalize.css/4.1.1/normalize.css" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="../../css/elm-datepicker.css" />
+
+    <style type="text/css">
+      body {
+          font-family: 'Roboto', sans-serif;
+      }
+
+      .container {
+          width: 680px;
+          margin: 0 auto;
+      }
+
+      #range > div {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      #range h1 {
+        min-width: 100%;
+      }
+
+      #range > div > div:last-child::before {
+        content: "–";
+        padding: 0 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="range">
+      </div>
+    </div>
+
+    <script src="range.js"></script>
+    <script>
+      Elm.Range.embed(document.getElementById("range"));
+    </script>
+  </body>
+</html>
