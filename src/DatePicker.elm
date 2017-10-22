@@ -51,8 +51,7 @@ type Msg
     = CurrentDate Date
     | ChangeFocus Date
     | Pick (Maybe Date)
-    | Text String
-    | SubmitText
+    | SubmitText String
     | Focus
     | Blur
     | MouseDown
@@ -328,34 +327,27 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
             , Changed date
             )
 
-        Text text ->
-            { model | inputText = Just text } ! []
-
-        SubmitText ->
+        SubmitText inputText ->
             let
                 isWhitespace =
                     String.trim >> String.isEmpty
 
                 dateEvent =
-                    let
-                        text =
-                            model.inputText ?> ""
-                    in
-                        if isWhitespace text then
-                            Changed Nothing
-                        else
-                            text
-                                |> settings.parser
-                                |> Result.map
-                                    (Changed
-                                        << (\date ->
-                                                if settings.isDisabled date then
-                                                    Nothing
-                                                else
-                                                    Just date
-                                           )
-                                    )
-                                |> Result.withDefault NoChange
+                    if isWhitespace inputText then
+                        Changed Nothing
+                    else
+                        inputText
+                            |> settings.parser
+                            |> Result.map
+                                (Changed
+                                    << (\date ->
+                                            if settings.isDisabled date then
+                                                Nothing
+                                            else
+                                                Just date
+                                       )
+                                )
+                            |> Result.withDefault NoChange
             in
                 ( DatePicker <|
                     { model
@@ -365,7 +357,7 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
                                     Nothing
 
                                 NoChange ->
-                                    model.inputText
+                                    Just inputText
                         , focused =
                             case dateEvent of
                                 Changed _ ->
@@ -429,8 +421,7 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                 ([ Attrs.classList inputClasses
                  , Attrs.name (settings.inputName ?> "")
                  , type_ "text"
-                 , on "change" (Json.succeed SubmitText)
-                 , onInput Text
+                 , on "change" (Json.map SubmitText targetValue)
                  , onBlur Blur
                  , onClick Focus
                  , onFocus Focus
