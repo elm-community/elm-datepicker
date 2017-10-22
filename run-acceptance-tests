@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+
+# make sure latest build is being run
+
+cd examples && make simple-nightwatch-example && cd ..
+
+
+# start some required background processes
+
+elm-reactor &
+ELM_REACTOR_PID=$!
+
+chromedriver &
+CHROMEDRIVER_PID=$!
+
+
+# run nightwatch in the foreground
+
+./node_modules/.bin/nightwatch
+
+
+# after nightwatch exits, kill background processes
+
+echo "shutting down Elm Reactor with pkill elm-reactor"
+pkill elm-reactor
+echo "shutting down Chromedriver with PID $CHROMEDRIVER_PID"
+kill "$CHROMEDRIVER_PID"

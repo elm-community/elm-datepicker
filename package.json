@@ -1,0 +1,23 @@
+{
+  "name": "elm-datepicker",
+  "version": "1.0.0",
+  "description": "``` shell elm package install elm-community/elm-datepicker ```",
+  "main": "index.js",
+  "directories": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elm-community/elm-datepicker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elm-community/elm-datepicker/issues"
+  },
+  "homepage": "https://github.com/elm-community/elm-datepicker#readme",
+  "devDependencies": {
+    "nightwatch": "^0.9.16"
+  }
+}
