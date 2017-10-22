@@ -38,7 +38,7 @@ module DatePicker
 import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
-import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, defaultValue, selected)
+import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, selected)
 import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions, targetValue)
 import Html.Keyed
 import Json.Decode as Json
@@ -449,16 +449,15 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                         (Maybe.map settings.dateFormatter pickedDate
                             |> Maybe.withDefault ""
                         )
-                    |> defaultValue
+                    |> value
                 ]
     in
-        Html.Keyed.node "div"
-            [ class "container" ]
-            [ ( "dateInput", dateInput )
+        div [ class "container" ]
+            [ dateInput
             , if open then
-                ( "datePicker", datePicker pickedDate settings model )
+                datePicker pickedDate settings model
               else
-                ( "text", text "" )
+                text ""
             ]
 
 
