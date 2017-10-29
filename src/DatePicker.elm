@@ -85,9 +85,6 @@ type alias Model =
     , focused :
         Maybe Date
         -- date currently center-focused by picker, but not necessarily chosen
-    , inputText :
-        Maybe String
-        -- for user input that hasn't yet been submitted
     , today :
         Date
         -- actual, current day as far as we know
@@ -226,7 +223,6 @@ init =
         { open = False
         , forceOpen = False
         , focused = Just initDate
-        , inputText = Nothing
         , today = initDate
         }
     , Task.perform CurrentDate Date.now
@@ -245,7 +241,6 @@ initFromDate date =
         { open = False
         , forceOpen = False
         , focused = Just date
-        , inputText = Nothing
         , today = date
         }
 
@@ -262,7 +257,6 @@ initFromDates today date =
         { open = False
         , forceOpen = False
         , focused = date
-        , inputText = Nothing
         , today = today
         }
 
@@ -320,7 +314,6 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
             ( DatePicker <|
                 { model
                     | open = False
-                    , inputText = Nothing
                     , focused = Nothing
                 }
             , Cmd.none
@@ -351,14 +344,7 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
             in
                 ( DatePicker <|
                     { model
-                        | inputText =
-                            case dateEvent of
-                                Changed _ ->
-                                    Nothing
-
-                                NoChange ->
-                                    Just inputText
-                        , focused =
+                        | focused =
                             case dateEvent of
                                 Changed _ ->
                                     Nothing
@@ -435,11 +421,9 @@ view pickedDate settings (DatePicker ({ open } as model)) =
         dateInput =
             inputCommon
                 [ placeholder settings.placeholder
-                , model.inputText
-                    |> Maybe.withDefault
-                        (Maybe.map settings.dateFormatter pickedDate
-                            |> Maybe.withDefault ""
-                        )
+                , (Maybe.map settings.dateFormatter pickedDate
+                    |> Maybe.withDefault ""
+                  )
                     |> value
                 ]
     in
