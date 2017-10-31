@@ -38,7 +38,7 @@ module DatePicker
 import Date exposing (Date, Day(..), Month, day, month, year)
 import DatePicker.Date exposing (..)
 import Html exposing (..)
-import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, defaultValue, selected)
+import Html.Attributes as Attrs exposing (href, placeholder, tabindex, type_, value, selected)
 import Html.Events exposing (on, onBlur, onClick, onInput, onFocus, onWithOptions, targetValue)
 import Html.Keyed
 import Json.Decode as Json
@@ -51,8 +51,7 @@ type Msg
     = CurrentDate Date
     | ChangeFocus Date
     | Pick (Maybe Date)
-    | Text String
-    | SubmitText
+    | SubmitText String
     | Focus
     | Blur
     | MouseDown
@@ -86,9 +85,6 @@ type alias Model =
     , focused :
         Maybe Date
         -- date currently center-focused by picker, but not necessarily chosen
-    , inputText :
-        Maybe String
-        -- for user input that hasn't yet been submitted
     , today :
         Date
         -- actual, current day as far as we know
@@ -227,7 +223,6 @@ init =
         { open = False
         , forceOpen = False
         , focused = Just initDate
-        , inputText = Nothing
         , today = initDate
         }
     , Task.perform CurrentDate Date.now
@@ -246,7 +241,6 @@ initFromDate date =
         { open = False
         , forceOpen = False
         , focused = Just date
-        , inputText = Nothing
         , today = date
         }
 
@@ -263,7 +257,6 @@ initFromDates today date =
         { open = False
         , forceOpen = False
         , focused = date
-        , inputText = Nothing
         , today = today
         }
 
@@ -321,52 +314,37 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
             ( DatePicker <|
                 { model
                     | open = False
-                    , inputText = Nothing
                     , focused = Nothing
                 }
             , Cmd.none
             , Changed date
             )
 
-        Text text ->
-            { model | inputText = Just text } ! []
-
-        SubmitText ->
+        SubmitText inputText ->
             let
                 isWhitespace =
                     String.trim >> String.isEmpty
 
                 dateEvent =
-                    let
-                        text =
-                            model.inputText ?> ""
-                    in
-                        if isWhitespace text then
-                            Changed Nothing
-                        else
-                            text
-                                |> settings.parser
-                                |> Result.map
-                                    (Changed
-                                        << (\date ->
-                                                if settings.isDisabled date then
-                                                    Nothing
-                                                else
-                                                    Just date
-                                           )
-                                    )
-                                |> Result.withDefault NoChange
+                    if isWhitespace inputText then
+                        Changed Nothing
+                    else
+                        inputText
+                            |> settings.parser
+                            |> Result.map
+                                (Changed
+                                    << (\date ->
+                                            if settings.isDisabled date then
+                                                Nothing
+                                            else
+                                                Just date
+                                       )
+                                )
+                            |> Result.withDefault NoChange
             in
                 ( DatePicker <|
                     { model
-                        | inputText =
-                            case dateEvent of
-                                Changed _ ->
-                                    Nothing
-
-                                NoChange ->
-                                    model.inputText
-                        , focused =
+                        | focused =
                             case dateEvent of
                                 Changed _ ->
                                     Nothing
@@ -429,8 +407,7 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                 ([ Attrs.classList inputClasses
                  , Attrs.name (settings.inputName ?> "")
                  , type_ "text"
-                 , on "change" (Json.succeed SubmitText)
-                 , onInput Text
+                 , on "change" (Json.map SubmitText targetValue)
                  , onBlur Blur
                  , onClick Focus
                  , onFocus Focus
@@ -444,21 +421,18 @@ view pickedDate settings (DatePicker ({ open } as model)) =
         dateInput =
             inputCommon
                 [ placeholder settings.placeholder
-                , model.inputText
-                    |> Maybe.withDefault
-                        (Maybe.map settings.dateFormatter pickedDate
-                            |> Maybe.withDefault ""
-                        )
-                    |> defaultValue
+                , (Maybe.map settings.dateFormatter pickedDate
+                    |> Maybe.withDefault ""
+                  )
+                    |> value
                 ]
     in
-        Html.Keyed.node "div"
-            [ class "container" ]
-            [ ( "dateInput", dateInput )
+        div [ class "container" ]
+            [ dateInput
             , if open then
-                ( "datePicker", datePicker pickedDate settings model )
+                datePicker pickedDate settings model
               else
-                ( "text", text "" )
+                text ""
             ]
 
 

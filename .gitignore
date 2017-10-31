@@ -1,3 +1,7 @@
 /elm-stuff
 /elm.js
 /.idea
+/node_modules
+
+#nightwatch reports
+/reports

@@ -112,3 +112,20 @@ from [here][scss].
 
 [compiled]: https://github.com/elm-community/elm-datepicker/blob/master/css/elm-datepicker.css
 [scss]: https://github.com/elm-community/elm-datepicker/blob/master/css/elm-datepicker.scss
+
+
+## Running the acceptance tests
+### Prerequisites
+
+- elm reactor - this is most likely already installed if you're using Elm!
+- chromedriver (https://sites.google.com/a/chromium.org/chromedriver/).
+  Try `brew install chromedriver` if you're on OSX.
+
+
+### Install the testing tools
+run `npm install`
+
+### Run the tests
+`./run-acceptance-tests`
+
+Please file an issue if you have any difficulty running the tests.

@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <title>elm-datepicker example</title>
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://necolas.github.io/normalize.css/4.1.1/normalize.css" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto" />
+
+    <link rel="stylesheet"
+          type="text/css"
+          href="../../css/elm-datepicker.css" />
+
+    <style type="text/css">
+      body {
+          font-family: 'Roboto', sans-serif;
+      }
+
+      .container {
+          width: 680px;
+          margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="simple-nightwatch">
+      </div>
+    </div>
+
+    <script src="simple-nightwatch.js"></script>
+    <script>
+      Elm.SimpleNightwatch.embed(document.getElementById("simple-nightwatch"));
+    </script>
+  </body>
+</html>
