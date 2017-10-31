@@ -1,5 +1,5 @@
 {
-    "version": "7.2.2",
+    "version": "7.2.3",
     "summary": "A reusable date picker component",
     "repository": "https://github.com/elm-community/elm-datepicker.git",
     "license": "BSD3",
