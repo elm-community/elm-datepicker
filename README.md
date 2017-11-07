@@ -100,7 +100,7 @@ update msg model =
 See the [examples][examples] folder or try it on ellie-app: [simple] example and [bootstrap] example.
 
 [examples]: https://github.com/elm-community/elm-datepicker/tree/master/examples
-[simple]: https://ellie-app.com/pwFvvCqBgYa1/0
+[simple]: https://ellie-app.com/5QFsDgQVva1/0
 [bootstrap]: https://ellie-app.com/pwGJj5T6TBa1/0
 
 
