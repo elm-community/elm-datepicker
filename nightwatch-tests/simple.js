@@ -21,7 +21,7 @@ module.exports = {
     client.url(url);
     client.expect.element(textInputSelector).to.be.present.before(defaultWait);
     client.click(textInputSelector);
-    client.setValue(textInputSelector, "1 Jan 1980");
+    slowlySendKeys(client, textInputSelector, "1 Jan 1980");
     client.expect.element(topLeftDaySelector).to.be.present.before(defaultWait);
     client.click(topLeftDaySelector);
     client.expect.element(textInputSelector).value.to.equal("1969/06/29").before(defaultWait);
@@ -32,8 +32,8 @@ module.exports = {
     client.url(url);
     client.expect.element(textInputSelector).to.be.present.before(defaultWait);
     client.click(textInputSelector);
-    client.setValue(textInputSelector, "1 Jan 1980");
-    client.setValue(textInputSelector, client.Keys.ENTER);
+    slowlySendKeys(client, textInputSelector, "1 Jan 1980");
+    client.sendKeys(textInputSelector, client.Keys.ENTER);
     client.expect.element(topLeftDaySelector).to.be.present.before(defaultWait);
     client.expect.element(".elm-datepicker--row:first-child .elm-datepicker--day:nth-child(3)")
       .to.have.attribute('class').which.contains('elm-datepicker--picked');
@@ -56,7 +56,7 @@ module.exports = {
   //   client.url(url);
   //   client.expect.element(textInputSelector).to.be.present.before(defaultWait);
   //   client.click(textInputSelector);
-  //   client.setValue(textInputSelector, longTextExample);
+  //   client.sendKeys(textInputSelector, longTextExample);
   //   client.expect.element(textInputSelector).value.to.equal(longTextExample).before(defaultWait);
   //   client.end();
   // },
@@ -66,7 +66,7 @@ module.exports = {
     client.url(url);
     client.expect.element(textInputSelector).to.be.present.before(defaultWait);
     client.click(textInputSelector);
-    client.setValue(textInputSelector, "testing");
+    slowlySendKeys(client, textInputSelector, "testing");
 
     // the SimpleNightwatch.elm app has a NoOp message that is triggered after 2
     // seconds. The NoOp causes a re-render of the app. This should not
@@ -78,3 +78,11 @@ module.exports = {
 
 
 };
+
+
+function slowlySendKeys(client, selector, text) {
+  for (i in text) {
+    client.sendKeys(selector, text[i]);
+    client.pause(50);
+  }
+}
