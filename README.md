@@ -125,6 +125,9 @@ from [here][scss].
 ### Install the testing tools
 run `npm install`
 
+### build the examples
+cd examples && make && cd ..
+
 ### Run the tests
 `./run-acceptance-tests`
 

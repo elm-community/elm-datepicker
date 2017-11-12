@@ -5,11 +5,15 @@ module SimpleNightwatch exposing (main)
 
 import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings, DateEvent(..))
-import Html exposing (Html, div, h1, text)
-
+import Html exposing (Html, div, h1, text, button)
+import Html.Events exposing (onClick)
+import Process
+import Task
+import Time
 
 type Msg
     = ToDatePicker DatePicker.Msg
+    | NoOp
 
 
 type alias Model =
@@ -36,7 +40,9 @@ init =
         ( { date = Nothing
           , datePicker = DatePicker.initFromDate moonLandingDate
           }
-        , Cmd.none
+          -- trigger a NoOp command after two seconds. This is used to test
+          -- that re-renders of the app do not cause things to dissapear.
+        , delayedNoOpCmd { seconds = 2 }
         )
 
 
@@ -62,6 +68,9 @@ update msg ({ date, datePicker } as model) =
                 }
                     ! [ Cmd.map ToDatePicker datePickerFx ]
 
+        NoOp ->
+            model ! []
+
 
 view : Model -> Html Msg
 view ({ date, datePicker } as model) =
@@ -80,6 +89,12 @@ view ({ date, datePicker } as model) =
 formatDate : Date -> String
 formatDate d =
     toString (month d) ++ " " ++ toString (day d) ++ ", " ++ toString (year d)
+
+
+delayedNoOpCmd : { seconds : Float } -> Cmd Msg
+delayedNoOpCmd { seconds } =
+        Process.sleep (seconds * Time.second)
+        |> Task.perform (\_ -> NoOp)
 
 
 main : Program Never Model Msg
