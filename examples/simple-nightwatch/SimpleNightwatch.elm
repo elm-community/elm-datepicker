@@ -6,7 +6,6 @@ module SimpleNightwatch exposing (main)
 import Date exposing (Date, Day(..), day, dayOfWeek, month, year)
 import DatePicker exposing (defaultSettings, DateEvent(..))
 import Html exposing (Html, div, h1, text, button)
-import Html.Events exposing (onClick)
 import Process
 import Task
 import Time
