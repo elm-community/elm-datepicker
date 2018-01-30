@@ -85,12 +85,14 @@ type alias Model =
     , forceOpen : Bool
     , focused :
         Maybe Date
-        -- date currently center-focused by picker, but not necessarily chosen
+
+    -- date currently center-focused by picker, but not necessarily chosen
     , inputText :
         Maybe String
     , today :
         Date
-        -- actual, current day as far as we know
+
+    -- actual, current day as far as we know
     }
 
 
@@ -100,17 +102,14 @@ type DatePicker
     = DatePicker Model
 
 
-{-| A record of default settings for the date picker.  Extend this if
+{-| A record of default settings for the date picker. Extend this if
 you want to customize your date picker.
-
 
     import DatePicker exposing (defaultSettings)
 
     DatePicker.init { defaultSettings | placeholder = "Pick a date" }
 
-
 To disable certain dates:
-
 
     import Date exposing (Day(..), dayOfWeek)
     import DatePicker exposing (defaultSettings)
@@ -147,7 +146,6 @@ yearRangeActive yearRange =
 
 {-| Select a range of date to display
 
-
     DatePicker.init { defaultSettings | changeYear = between 1555 2018 }
 
 -}
@@ -161,7 +159,6 @@ between start end =
 
 {-| Select a symmetric range of date to display
 
-
     DatePicker.init { defaultSettings | changeYear = moreOrLess 10 }
 
 -}
@@ -171,7 +168,6 @@ moreOrLess range =
 
 
 {-| Select a range from a given year to this year
-
 
     DatePicker.init { defaultSettings | changeYear = from 1995 }
 
@@ -183,7 +179,6 @@ from year =
 
 {-| Select a range from this year to a given year
 
-
     DatePicker.init { defaultSettings | changeYear = to 2020 }
 
 -}
@@ -193,7 +188,6 @@ to year =
 
 
 {-| Turn off the date range
-
 
     DatePicker.init { defaultSettings | changeYear = off }
 
@@ -208,16 +202,16 @@ formatCell day =
     text day
 
 
-{-| The default initial state of the Datepicker.  You must execute
+{-| The default initial state of the Datepicker. You must execute
 the returned command (which, for the curious, sets the current date)
 for the date picker to behave correctly.
 
     init =
-      let
-         (datePicker, datePickerFx) =
-           DatePicker.init
-      in
-         { picker = datePicker } ! [ Cmd.map ToDatePicker datePickerfx ]
+        let
+            ( datePicker, datePickerFx ) =
+                DatePicker.init
+        in
+            { picker = datePicker } ! [ Cmd.map ToDatePicker datePickerfx ]
 
 -}
 init : ( DatePicker, Cmd Msg )
@@ -236,7 +230,7 @@ init =
 {-| Initialize a DatePicker with a given Date
 
     init date =
-      { picker = DatePicker.initFromDate date } ! [ ]
+        { picker = DatePicker.initFromDate date } ! []
 
 -}
 initFromDate : Date -> DatePicker
@@ -253,7 +247,7 @@ initFromDate date =
 {-| Initialize a DatePicker with a date for today and Maybe a date picked
 
     init today date =
-      { picker = DatePicker.initFromDates today date } ! []
+        { picker = DatePicker.initFromDates today date } ! []
 
 -}
 initFromDates : Date -> Maybe Date -> DatePicker
@@ -281,8 +275,7 @@ prepareDates date firstDayOfWeek =
         }
 
 
-{-|
-Expose if the datepicker is open
+{-| Expose if the datepicker is open
 -}
 isOpen : DatePicker -> Bool
 isOpen (DatePicker model) =
@@ -297,7 +290,7 @@ focusedDate (DatePicker model) =
 
 
 {-| A sugaring of `Maybe` to explicitly tell you how to interpret `Changed Nothing`, because `Just Nothing` seems somehow wrong.
-    Used to represent a request, by the datepicker, to change the selected date.
+Used to represent a request, by the datepicker, to change the selected date.
 -}
 type DateEvent
     = NoChange
@@ -305,7 +298,7 @@ type DateEvent
 
 
 {-| The date picker update function. The third tuple member represents a user action to change the
-    date.
+date.
 -}
 update : Settings -> Msg -> DatePicker -> ( DatePicker, Cmd Msg, DateEvent )
 update settings msg (DatePicker ({ forceOpen, focused } as model)) =
@@ -396,15 +389,19 @@ update settings msg (DatePicker ({ forceOpen, focused } as model)) =
 
 
 {-| Generate a message that will act as if the user has chosen a certain date,
-    so you can call `update` on the model yourself.
-    Note that this is different from just changing the "current chosen" date,
-    since the picker doesn't actually have internal state for that.
-    Rather, it will:
-        * change the calendar focus
-        * replace the input text with the new value
-        * close the picker
+so you can call `update` on the model yourself.
+Note that this is different from just changing the "current chosen" date,
+since the picker doesn't actually have internal state for that.
+Rather, it will:
+
+  - change the calendar focus
+
+  - replace the input text with the new value
+
+  - close the picker
 
     update datepickerSettings (pick (Just someDate)) datepicker
+
 -}
 pick : Maybe Date -> Msg
 pick =
@@ -554,7 +551,7 @@ datePicker pickedDate settings ({ focused, today } as model) =
             Html.Keyed.node "select"
                 [ onChange (newYear currentDate >> ChangeFocus), class "year-menu" ]
                 (List.indexedMap yearOption
-                    (yearRange { focused = currentDate, currentMonth = currentMonth } settings.changeYear)
+                    (yearRange { today = today, focused = currentDate, currentMonth = currentMonth } settings.changeYear)
                 )
     in
         div
