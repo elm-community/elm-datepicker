@@ -551,7 +551,7 @@ datePicker pickedDate settings ({ focused, today } as model) =
             Html.Keyed.node "select"
                 [ onChange (newYear currentDate >> ChangeFocus), class "year-menu" ]
                 (List.indexedMap yearOption
-                    (yearRange { today = today, focused = currentDate, currentMonth = currentMonth } settings.changeYear)
+                    (yearRange today settings.changeYear)
                 )
     in
         div
