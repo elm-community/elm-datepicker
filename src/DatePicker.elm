@@ -64,6 +64,7 @@ type Msg
 type alias Settings =
     { placeholder : String
     , classNamespace : String
+    , containerClassList : List ( String, Bool )
     , inputClassList : List ( String, Bool )
     , inputName : Maybe String
     , inputId : Maybe String
@@ -122,6 +123,7 @@ defaultSettings : Settings
 defaultSettings =
     { placeholder = "Please pick a date..."
     , classNamespace = "elm-datepicker--"
+    , containerClassList = []
     , inputClassList = []
     , inputName = Nothing
     , inputId = Nothing
@@ -455,8 +457,12 @@ view pickedDate settings (DatePicker ({ open } as model)) =
                         )
                     |> value
                 ]
+
+        containerClassList =
+            ( "container", True ) :: settings.containerClassList
     in
-        div [ class "container" ]
+        div
+            [ Attrs.classList containerClassList ]
             [ dateInput
             , if open then
                 datePicker pickedDate settings model
