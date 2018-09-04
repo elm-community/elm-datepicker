@@ -6,6 +6,10 @@ elm package install elm-community/elm-datepicker
 
 A reusable date picker component in Elm.
 
+## 0.19 Compatibility
+
+As of 0.19, the Elm community is not hosting a central/default datepicker. It didn't seem like the kind of thing that would be in a standard library. Please use the [CurrySoftware](https://github.com/CurrySoftware/elm-datepicker) fork for 0.19+. Many thanks to them for taking it on!
+
 
 ## Usage
 
